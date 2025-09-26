@@ -18,4 +18,4 @@ The primary focus of this plugin is to provide abstract interface for things lik
 
 Choose providers for abstract interfaces, connect those plugins to MirraSDK, and have an advantage of simplicity over complexity by implementing MirraSDK API instead of concrete plugins.
 
-Created by Roman Likhadievski (romanlee17) from Mirra Games.
+Created by Roman Likhadievski ([romanlee17](https://github.com/romanlee17)) from Mirra Games.

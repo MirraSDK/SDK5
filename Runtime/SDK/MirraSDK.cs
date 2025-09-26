@@ -1,5 +1,4 @@
 using MirraGames.SDK.Common;
-using System.Collections.Generic;
 using UnityEngine.Scripting;
 
 namespace MirraGames.SDK {
@@ -7,7 +6,7 @@ namespace MirraGames.SDK {
     [Root, Preserve]
     public partial class MirraSDK {
 
-        public const string Version = "5.0.0";
+        public const string Version = "5.0.2";
 
         private MirraSDK(MainFactory factory) {
             Logger.CreateText(this, $"Starting up. Version {Version}");

@@ -1,0 +1,16 @@
+{
+    "name": "MirraGames.SDK.UnityEngine",
+    "rootNamespace": "MirraGames.SDK.UnityEngine",
+    "references": [
+        "MirraGames.SDK.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

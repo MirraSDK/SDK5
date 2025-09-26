@@ -1,0 +1,55 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <MirraGames.SDK.UIElements.GridViewport>
+        <ui:VisualElement style="position: absolute; left: 50px; top: 50px;">
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.Achievements_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.BannerFeatures />
+                <MirraGames.SDK.Features.Interstitial_Features />
+                <MirraGames.SDK.Features.Rewarded_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.EventsReporter_Features />
+                <MirraGames.SDK.Features.GameplayReporter_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.Addressables_Features />
+                <MirraGames.SDK.Features.AssetBundles_Features />
+                <MirraGames.SDK.Features.StreamingAssets_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.Audio_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.Data_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.DeviceBrowser_Features />
+                <MirraGames.SDK.Features.DeviceCursor_Features />
+                <MirraGames.SDK.Features.DeviceInfo_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.Flags_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.LanguageInfo_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.ProductPurchase_Features />
+                <MirraGames.SDK.Features.ProductRestore_Features />
+                <MirraGames.SDK.Features.ProductSupply_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.PlatformInfo_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.PlayerAccount_Features />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <MirraGames.SDK.Features.DateTime_Features />
+                <MirraGames.SDK.Features.TimeScale_Features />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </MirraGames.SDK.UIElements.GridViewport>
+</ui:UXML>

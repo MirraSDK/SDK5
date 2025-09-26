@@ -1,0 +1,22 @@
+{
+    "name": "MirraGames.SDK",
+    "rootNamespace": "MirraGames.SDK",
+    "references": [
+        "MirraGames.SDK.Common",
+        "MirraGames.SDK.Fallback",
+        "MirraGames.SDK.Prototype",
+        "MirraGames.SDK.MirraWeb",
+        "MirraGames.SDK.System",
+        "MirraGames.SDK.UnityEngine",
+        "MirraGames.SDK.Addressables"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

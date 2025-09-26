@@ -1,0 +1,53 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Editor/Toolkit/Components/Stylesheets/ScrollerStyle.uss?fileID=7433441132597879392&amp;guid=e30d73ac5d20665468a86dc798067238&amp;type=3#ScrollerStyle" />
+    <ui:ScrollView vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1; flex-shrink: 0;">
+        <ui:VisualElement style="flex-shrink: 0; flex-grow: 1; margin-top: 10px;">
+            <ui:VisualElement name="UnityGroup">
+                <ui:Label text="Unity" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 0; margin-left: 10px;" />
+                <ui:VisualElement style="flex-direction: row; margin-top: 5px; margin-left: 10px;">
+                    <ui:Button text="Open Build Settings" display-tooltip-when-elided="true" name="OpenBuildSettings" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <ui:Button text="Open Player Settings" display-tooltip-when-elided="true" name="OpenPlayerSettings" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 10px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="WebGLSettingsGroup">
+                <ui:Label text="WebGL Settings" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px;" />
+                <ui:DropdownField label="Enable Exceptions" choices="Full Without Stacktrace" index="0" name="EnableExceptions" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:DropdownField label="Compression Format" choices="None,Gzip,Brotli" index="2" name="CompressionFormat" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:Toggle label="Name Files As Hashes" name="NameFilesAsHashes" style="margin-top: 5px; margin-right: 10px; margin-bottom: 0; margin-left: 10px;" />
+                <ui:Toggle label="Data Caching" name="DataCaching" style="margin-top: 5px; margin-right: 10px; margin-bottom: 0; margin-left: 10px;" />
+                <ui:DropdownField label="Debug Symbols" choices="Embedded" index="0" name="DebugSymbols" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:Toggle label="Decompression Fallback" name="DecompressionFallback" style="margin-top: 5px; margin-right: 10px; margin-bottom: 0; margin-left: 10px;" />
+                <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 10px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="WebGLOutputGroup">
+                <ui:Label text="WebGL Output" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px;" />
+                <ui:DropdownField label="Build Export Format" index="0" name="BuildExportFormat" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:TextField picking-mode="Ignore" label="Builds Folder Path" name="BuildsFolderPath" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:VisualElement style="flex-direction: row; margin-top: 5px; margin-right: 10px; margin-left: 10px; justify-content: flex-end;">
+                    <ui:Button text="Reset Builds Folder" display-tooltip-when-elided="true" name="ResetBuildsFolder" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                    <ui:Button text="Select Builds Folder" display-tooltip-when-elided="true" name="SelectBuildsFolder" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                </ui:VisualElement>
+                <ui:TextField picking-mode="Ignore" label="Build File Name" name="BuildFileName" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:VisualElement style="flex-direction: row; margin-top: 5px; margin-right: 10px; margin-left: 10px; justify-content: flex-end;">
+                    <ui:Button text="Reset File Name" display-tooltip-when-elided="true" name="ResetFileName" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 10px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ConfigurationGroup">
+                <ui:Label text="Configuration" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 0; margin-left: 10px;" />
+                <ui:DropdownField label="Build Configuration" index="0" name="BuildConfiguration" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
+                <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 10px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="WebGLActionsGroup">
+                <ui:Label text="WebGL Actions" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px;" />
+                <ui:VisualElement style="flex-direction: row; margin-top: 5px; margin-left: 10px;">
+                    <ui:Button text="Build" display-tooltip-when-elided="true" name="Build" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <ui:Button text="Build And Run" display-tooltip-when-elided="true" name="BuildAndRun" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                    <ui:Button text="Open Builds Folder" display-tooltip-when-elided="true" name="OpenBuildsFolder" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 10px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:ScrollView>
+</ui:UXML>

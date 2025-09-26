@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../UnityStyles/UnityStyles.uss" />
+    <Style src="Inspector.uss" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement class="inspector-header" style="height: 50px; border-bottom-width: 1px;">
+            <ui:Label text="Label" display-tooltip-when-elided="true" class="inspector-label" />
+        </ui:VisualElement>
+        <ui:ScrollView name="inspector-content" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1;" />
+        <ui:VisualElement name="footer-content" style="border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); border-top-width: 1px; flex-grow: 0; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

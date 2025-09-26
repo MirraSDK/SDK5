@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk5/Runtime/Common/UIToolkit/UnityStyles/UnityStyles.uss?fileID=7433441132597879392&amp;guid=32457741b76717a4082ca9b9cfa86b61&amp;type=3#UnityStyles" />
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk5/Runtime/Common/UIToolkit/HorizontalCard/HorizontalCard.uss?fileID=7433441132597879392&amp;guid=5ee0d3e3b573ed2428d6bc2d98ff9a32&amp;type=3#HorizontalCard" />
+    <ui:VisualElement name="item-container" focusable="true" class="item-container" style="padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 10px; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); border-bottom-width: 1px;">
+        <ui:VisualElement name="thumbnail" style="width: 48px; height: 48px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; border-left-color: rgb(40, 40, 40); border-right-color: rgb(40, 40, 40); border-top-color: rgb(40, 40, 40); border-bottom-color: rgb(40, 40, 40); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; background-color: rgb(88, 88, 88);">
+            <ui:Label text="X" display-tooltip-when-elided="true" name="letter" style="flex-shrink: 1; flex-grow: 1; -unity-text-align: middle-center; font-size: 30px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-font: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#Arial&quot;);" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; justify-content: center;">
+            <ui:Label text="Name" display-tooltip-when-elided="true" name="header-text" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold;" />
+            <ui:Label text="Description" display-tooltip-when-elided="true" name="description-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px; white-space: normal;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="justify-content: center;">
+            <ui:Label text="Hint" display-tooltip-when-elided="true" name="hint-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px; white-space: normal;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

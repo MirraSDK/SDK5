@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Editor/Toolkit/Components/Stylesheets/ScrollerStyle.uss?fileID=7433441132597879392&amp;guid=e30d73ac5d20665468a86dc798067238&amp;type=3#ScrollerStyle" />
+    <ui:VisualElement>
+        <ui:VisualElement name="ConfigurationView">
+            <ui:Label text="Configuration" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; -unity-text-align: middle-left; font-size: 12px; -unity-font-style: bold;" />
+            <ui:VisualElement name="ConfigurationContainer" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ProvidersView">
+            <ui:Label text="Providers" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; -unity-text-align: middle-left; font-size: 12px; -unity-font-style: bold;" />
+            <ui:VisualElement name="ProvidersContainer" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

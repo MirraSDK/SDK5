@@ -1,0 +1,14 @@
+{
+    "name": "MirraGames.SDK.Common",
+    "rootNamespace": "MirraGames.SDK.Common",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../UnityStyles/UnityStyles.uss" />
+    <Style src="FeatureBoolean.uss" />
+    <ui:VisualElement focusable="true" class="feature-toggle">
+        <ui:Toggle value="true" />
+        <ui:Label text="Toggle" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 5px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>

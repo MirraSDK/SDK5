@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../UnityStyles/UnityStyles.uss" />
+    <Style src="ScrollTabs.uss" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement class="tabs">
+            <ui:VisualElement name="buttons-container" class="tabs-container">
+                <ui:Button text="Button" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                <ui:Button text="Button" display-tooltip-when-elided="true" />
+                <ui:Button text="Button" display-tooltip-when-elided="true" />
+                <ui:Button text="Button" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1;">
+            <ui:VisualElement name="content-container" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

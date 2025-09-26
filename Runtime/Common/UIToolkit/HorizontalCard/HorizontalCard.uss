@@ -1,0 +1,27 @@
+.item-container {
+    flex-direction: row;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+.normal {
+    background-color: transparent;
+}
+
+.normal:hover {
+    background-color: rgb(48, 48, 48);
+}
+
+.selected {
+    background-color: rgb(44, 93, 135);
+}
+
+.selected:hover {
+    background-color: rgb(44, 93, 135);
+}

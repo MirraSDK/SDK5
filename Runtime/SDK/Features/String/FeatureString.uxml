@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../UnityStyles/UnityStyles.uss"/>
+    <Style src="./FeatureString.uss"/>
+    <ui:VisualElement focusable="true" class="feature-string" style="max-width: 200px; flex-wrap: wrap; flex-shrink: 0;">
+        <ui:VisualElement style="margin-right: 0; margin-left: 0; border-left-color: rgb(90, 90, 90); border-right-color: rgb(90, 90, 90); border-top-color: rgb(90, 90, 90); border-bottom-color: rgb(90, 90, 90); border-bottom-width: 1px; margin-top: 0; margin-bottom: 0; padding-right: 5px; padding-left: 5px; background-color: rgb(78, 78, 78);">
+            <ui:Label text="Property Name" display-tooltip-when-elided="true" name="property-name" class="property-name" />
+        </ui:VisualElement>
+        <ui:Label text="Property&#10;Multiline&#10;Value" name="property-value" style="white-space: normal; flex-grow: 1; flex-wrap: wrap; padding-top: 3px; padding-right: 3px; padding-bottom: 3px; padding-left: 3px; -unity-text-align: upper-left; flex-direction: column; justify-content: space-between; align-items: stretch; max-height: none; height: auto;" />
+    </ui:VisualElement>
+</ui:UXML>

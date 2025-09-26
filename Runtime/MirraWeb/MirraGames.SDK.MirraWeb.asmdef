@@ -1,0 +1,21 @@
+{
+    "name": "MirraGames.SDK.MirraWeb",
+    "rootNamespace": "MirraGames.SDK.MirraWeb",
+    "references": [
+        "MirraGames.SDK.Common"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WebGL"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_WEBGL"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

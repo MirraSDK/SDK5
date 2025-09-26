@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../UnityStyles/UnityStyles.uss" />
+    <Style src="NavigationList.uss" />
+    <ui:VisualElement name="item-icon" picking-mode="Ignore" class="item-icon" style="-unity-text-align: middle-left; width: 15px; height: 15px; justify-content: center; align-items: center; margin-left: 2.5px; margin-right: 2.5px;" />
+    <ui:Label text="Item Name" display-tooltip-when-elided="true" name="item-name" picking-mode="Ignore" class="item-name" style="max-height: 20px; min-height: 20px;" />
+</ui:UXML>

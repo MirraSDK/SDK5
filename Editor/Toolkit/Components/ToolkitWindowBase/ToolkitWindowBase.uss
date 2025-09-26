@@ -1,0 +1,18 @@
+.header-button {
+    flex-grow: 0;
+    flex-shrink: 1;
+    padding-top: 0;
+    padding-right: 5px;
+    padding-bottom: 0;
+    padding-left: 5px;
+    -unity-text-align: middle-center;
+    border-left-color: rgb(35, 35, 35);
+    border-right-color: rgb(35, 35, 35);
+    border-top-color: rgb(35, 35, 35);
+    border-bottom-color: rgb(35, 35, 35);
+    border-right-width: 1px;
+}
+
+.header-button:hover {
+    background-color: rgba(70, 70, 70, 255);
+}

@@ -1,0 +1,98 @@
+.foldout-override {
+    margin-top: 1px;
+    margin-right: 3px;
+    margin-bottom: 1px;
+    margin-left: 3px;
+}
+
+.foldout-view-button {
+    flex-direction: row;
+    background-color: rgb(87, 87, 87);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(40, 40, 40);
+    border-right-color: rgb(40, 40, 40);
+    border-top-color: rgb(40, 40, 40);
+    border-bottom-color: rgb(40, 40, 40);
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+}
+
+.foldout-view-button:hover {
+    background-color: rgb(102, 102, 102);
+}
+
+.foldout-override-toggle {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+}
+
+.foldout-label {
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 5px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.foldout-view-container {
+    border-top-width: 0;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(40, 40, 40);
+    border-right-color: rgb(40, 40, 40);
+    border-top-color: rgb(40, 40, 40);
+    border-bottom-color: rgb(40, 40, 40);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    top: -5px;
+    display: flex;
+    margin-bottom: -5px;
+}
+
+.foldout-content {
+    padding-top: 0;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    opacity: 1;
+    display: flex;
+}
+
+.foldout-override:focus .foldout-view-button {
+    border-left-color: rgb(123, 174, 250);
+    border-right-color: rgb(123, 174, 250);
+    border-top-color: rgb(123, 174, 250);
+    border-bottom-color: rgb(123, 174, 250);
+}
+
+.foldout-override:focus .foldout-view-container {
+    border-left-color: rgb(123, 174, 250);
+    border-right-color: rgb(123, 174, 250);
+    border-top-color: rgb(123, 174, 250);
+    border-bottom-color: rgb(123, 174, 250);
+}

@@ -1,0 +1,38 @@
+.unity-toggle {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.feature-toggle {
+    flex-direction: row;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
+    margin-bottom: 5px;
+}
+
+.feature-toggle:focus > Label {
+    color: rgb(123, 174, 250);
+}
+
+.feature-toggle:focus #unity-checkmark {
+    border-left-color: rgb(123, 174, 250);
+    border-right-color: rgb(123, 174, 250);
+    border-top-color: rgb(123, 174, 250);
+    border-bottom-color: rgb(123, 174, 250);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}

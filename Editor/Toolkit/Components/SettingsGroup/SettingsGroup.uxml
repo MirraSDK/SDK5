@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Runtime/Common/UIToolkit/UnityStyles/UnityStyles.uss?fileID=7433441132597879392&amp;guid=32457741b76717a4082ca9b9cfa86b61&amp;type=3#UnityStyles" />
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Editor/Toolkit/Components/Stylesheets/ScrollerStyle.uss?fileID=7433441132597879392&amp;guid=e30d73ac5d20665468a86dc798067238&amp;type=3#ScrollerStyle" />
+    <ui:VisualElement>
+        <ui:VisualElement name="ContentContainer" style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; background-color: rgb(53, 53, 53);" />
+    </ui:VisualElement>
+</ui:UXML>

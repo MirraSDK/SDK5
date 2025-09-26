@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Editor/Toolkit/Components/ToolkitWindowBase/ToolkitWindowBase.uss?fileID=7433441132597879392&amp;guid=bac4bed64460b974a9caa534e80b52d5&amp;type=3#ToolkitWindowBase" />
+    <ui:VisualElement name="header" style="height: 20px; border-bottom-width: 1px; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); align-items: flex-start; flex-grow: 0; flex-shrink: 1;">
+        <ui:VisualElement style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-grow: 1; align-items: stretch; flex-direction: row; justify-content: space-around;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="body" style="flex-grow: 1; width: 100%; height: 100%; flex-direction: row;">
+        <ui:VisualElement name="navigation" style="width: 200px; border-right-width: 1px; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); flex-shrink: 0; flex-grow: 0;" />
+        <ui:VisualElement name="viewport" style="flex-grow: 1; flex-shrink: 1;" />
+        <ui:VisualElement name="inspector" style="border-left-width: 1px; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); width: 400px; flex-grow: 0; flex-shrink: 0;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="WaitOverlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.59); transition-duration: 0.2s; display: none;">
+        <ui:Label text="Waiting for compilation to finish..." display-tooltip-when-elided="true" name="WaitLabel" style="flex-shrink: 0; flex-grow: 1; -unity-text-align: middle-center; font-size: 16px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Footer" style="height: 20px; border-bottom-width: 0; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); align-items: flex-start; flex-grow: 0; flex-shrink: 1; border-top-width: 1px; background-color: rgb(39, 39, 39);">
+        <ui:VisualElement style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-grow: 1; align-items: stretch; flex-direction: row; justify-content: space-around;">
+            <ui:Label text="MirraSDKInfo" display-tooltip-when-elided="true" name="MirraSDKInfo" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 5px; margin-bottom: 0; margin-left: 5px; flex-grow: 0; -unity-text-align: middle-left; color: rgb(229, 229, 229); font-size: 12px;" />
+            <ui:Label text="Updates  available" display-tooltip-when-elided="true" name="UpdatesAvailable" style="padding-top: 0; padding-right: 3px; padding-bottom: 0; padding-left: 3px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px; -unity-text-align: middle-center; word-spacing: -15px; background-color: rgb(196, 196, 196); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; color: rgb(56, 56, 56); font-size: 12px;" />
+            <ui:Label text="DebugInfo" display-tooltip-when-elided="true" name="DebugInfo" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 5px; margin-bottom: 0; margin-left: 5px; flex-grow: 1; -unity-text-align: middle-left; color: rgb(229, 229, 229); font-size: 12px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

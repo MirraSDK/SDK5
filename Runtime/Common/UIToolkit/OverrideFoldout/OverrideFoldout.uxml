@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Runtime/Common/UIToolkit/UnityStyles/UnityStyles.uss?fileID=7433441132597879392&amp;guid=32457741b76717a4082ca9b9cfa86b61&amp;type=3#UnityStyles" />
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk/Runtime/Common/UIToolkit/OverrideFoldout/OverrideFoldout.uss?fileID=7433441132597879392&amp;guid=81521e447e7eacf4a882a25b543539f2&amp;type=3#OverrideFoldout" />
+    <ui:VisualElement focusable="true" class="foldout-override">
+        <ui:VisualElement name="foldout-view-button" focusable="false" class="foldout-view-button">
+            <ui:Label text="Foldout Name" display-tooltip-when-elided="true" name="foldout-label" picking-mode="Ignore" class="foldout-label" />
+            <ui:Label text="(default)" display-tooltip-when-elided="true" name="foldout-status" picking-mode="Ignore" class="foldout-label" style="opacity: 0.5;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="foldout-view-container" picking-mode="Ignore" class="foldout-view-container">
+            <ui:VisualElement name="toggle-container" style="flex-direction: row; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; align-items: center; justify-content: flex-start;">
+                <ui:VisualElement name="ToggleView" style="flex-direction: row; display: flex;">
+                    <ui:Toggle name="foldout-override-toggle" class="foldout-override-toggle" style="align-items: center; justify-content: center;" />
+                    <ui:Label text="Use custom settings" display-tooltip-when-elided="true" picking-mode="Ignore" class="foldout-label" style="font-size: 12px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="foldout-content" picking-mode="Ignore" class="foldout-content" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

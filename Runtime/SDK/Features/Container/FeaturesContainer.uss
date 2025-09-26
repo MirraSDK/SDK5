@@ -1,0 +1,30 @@
+.features-container {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-left-color: rgb(90, 90, 90);
+    border-right-color: rgb(90, 90, 90);
+    border-top-color: rgb(90, 90, 90);
+    border-bottom-color: rgb(90, 90, 90);
+    background-color: rgb(32, 32, 32);
+    padding-top: 5px;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    min-width: 100px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    position: absolute;
+}
+
+.features-container:focus {
+    border-left-color: rgb(123, 174, 250);
+    border-right-color: rgb(123, 174, 250);
+    border-top-color: rgb(123, 174, 250);
+    border-bottom-color: rgb(123, 174, 250);
+}

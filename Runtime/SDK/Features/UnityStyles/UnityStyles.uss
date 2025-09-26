@@ -1,0 +1,73 @@
+Label {
+    color: rgb(210, 210, 210);
+    font-size: 12px;
+}
+
+Button {
+    background-color: rgb(88, 88, 88);
+    color: rgb(224, 224, 224);
+    border-left-color: rgb(36, 36, 36);
+    border-right-color: rgb(36, 36, 36);
+    border-top-color: rgb(36, 36, 36);
+    border-bottom-color: rgb(36, 36, 36);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    -unity-text-align: middle-center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-top: 2px;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    margin-left: 4px;
+    padding-top: 0;
+    padding-right: 4px;
+    padding-bottom: 0;
+    padding-left: 4px;
+    font-size: 12px;
+}
+
+Button:active {
+    background-color: rgb(70, 96, 124);
+    border-left-color: rgb(13, 13, 13);
+    border-right-color: rgb(13, 13, 13);
+    border-top-color: rgb(13, 13, 13);
+    border-bottom-color: rgb(13, 13, 13);
+}
+
+Button:focus {
+    border-left-color: rgb(123, 174, 250);
+    border-right-color: rgb(123, 174, 250);
+    border-top-color: rgb(123, 174, 250);
+    border-bottom-color: rgb(123, 174, 250);
+}
+
+Toggle #unity-checkmark {
+    background-color: rgb(37, 37, 37);
+    border-top-width: 2px;
+    border-left-color: rgb(24, 24, 24);
+    border-right-color: rgb(24, 24, 24);
+    border-top-color: rgb(13, 13, 13);
+    border-bottom-color: rgb(24, 24, 24);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    height: 14px;
+    width: 14px;
+    background-image: url("project://database/Packages/com.romanlee17.mirrasdk/Runtime/Common/UIToolkit/UnityStyles/Textures/checkmark.png?fileID=2800000&guid=d2fe617024313b645877ebd2c81384d6&type=3#checkmark");
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    font-size: 12px;
+}
+
+Toggle > Label {
+    min-width: 175px;
+}

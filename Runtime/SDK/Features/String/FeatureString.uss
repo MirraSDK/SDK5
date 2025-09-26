@@ -1,0 +1,50 @@
+Label {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    height: 20px;
+    max-height: 20px;
+    min-height: 20px;
+    -unity-text-align: middle-center;
+    font-size: 12px;
+}
+
+.property-name {
+    -unity-text-align: middle-left;
+    color: rgb(255, 255, 255);
+    -unity-font-style: normal;
+    font-size: 12px;
+}
+
+.feature-string {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(90, 90, 90);
+    border-right-color: rgb(90, 90, 90);
+    border-top-color: rgb(90, 90, 90);
+    border-bottom-color: rgb(90, 90, 90);
+    margin-bottom: 5px;
+    padding-right: 0;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgb(56, 56, 56);
+}
+
+.feature-string:focus {
+    border-left-color: rgb(123, 174, 249);
+    border-right-color: rgb(123, 174, 249);
+    border-top-color: rgb(123, 174, 249);
+    border-bottom-color: rgb(123, 174, 249);
+}

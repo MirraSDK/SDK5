@@ -4,11 +4,19 @@
 
 ## How to install
 
+Make sure you don't have any compilation errors before installing the package.
+
 Insert URL address below into Unity Package Manager (`Add package from git URL...`) and press `Add`.
 
 ```URL
 https://github.com/MirraSDK/SDK5.git
 ```
+
+After installation, you will be able to see `MirraSDK5` in the Editor window.
+
+<img width="219" height="112" alt="image" src="https://github.com/user-attachments/assets/b3934f89-e4c6-4630-b98e-37787babe22e" />
+
+You will need to use Toolkit window for selecting build configuration, changing API providers and other tweaks.
 
 ## How to use
 

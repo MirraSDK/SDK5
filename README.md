@@ -1,4 +1,4 @@
-## Crossplatform multipurpose plugin for Unity
+## Cross platform multipurpose plugin for Unity
 
 <img width="1202" height="623" alt="image" src="https://github.com/user-attachments/assets/c74686bd-4daf-4f16-8d1e-acf6749010bd" />
 
@@ -24,14 +24,14 @@ Created by Roman Likhadievski ([romanlee17](https://github.com/romanlee17)) from
 
 These web platforms are recognized automatically by integrated `mirraSDK.js` framework, no need to worry about connecting extensions for them. You only need to use `MirraWeb` configuration for WebGL build with `MirraWeb` providers, that is basically `mirraSDK.js` framework.
 
-- CoolMath
-- CrazyGames
-- GameDistribution
-- GamePix
-- Lagged
-- OK
-- PlayDeck
-- Poki
-- VK
-- Y8
-- YandexGames
+- CoolMath (https://www.coolmathgames.com/)
+- CrazyGames (https://www.crazygames.com/)
+- GameDistribution (https://gamedistribution.com/)
+- GamePix (https://www.gamepix.com/)
+- Lagged (https://lagged.com/)
+- OK (https://ok.ru/games)
+- PlayDeck (https://www.playdeck.io/)
+- Poki (https://poki.com/)
+- VK (https://vk.com/games)
+- Y8 (https://www.y8.com/)
+- YandexGames (https://yandex.com/games/)

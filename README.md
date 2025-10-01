@@ -10,6 +10,11 @@ Insert URL address below into Unity Package Manager (`Add package from git URL..
 https://github.com/MirraSDK/SDK5.git
 ```
 
+## How to use
+
+Detailed information about MirraSDK5 and its API available here:<br/>
+https://romanlee17.gitbook.io/mirrasdk
+
 ## About MirraSDK5
 
 Achieve automation and readability of your code by employing MirraSDK API as a replacement to many different plugins.

@@ -2,6 +2,16 @@
 
 <img width="1202" height="623" alt="image" src="https://github.com/user-attachments/assets/c74686bd-4daf-4f16-8d1e-acf6749010bd" />
 
+## About MirraSDK5
+
+Achieve automation and readability of your code by employing MirraSDK API as a replacement to many different plugins.
+
+The primary focus of this plugin is to provide abstract interface for things like Ads, Payments, Analytics, Data, and many other tools which you use in development.
+
+Choose providers for abstract interfaces, connect those plugins to MirraSDK, and have an advantage of simplicity over complexity by implementing MirraSDK API instead of concrete plugins.
+
+Created by Roman Likhadievski ([romanlee17](https://github.com/romanlee17)) from Mirra Games.
+
 ## How to install
 
 Make sure you don't have any compilation errors before installing the package.
@@ -22,16 +32,6 @@ You will need to use Toolkit window for selecting build configuration, changing 
 
 Detailed information about MirraSDK5 and its API available here:<br/>
 https://romanlee17.gitbook.io/mirrasdk
-
-## About MirraSDK5
-
-Achieve automation and readability of your code by employing MirraSDK API as a replacement to many different plugins.
-
-The primary focus of this plugin is to provide abstract interface for things like Ads, Payments, Analytics, Data, and many other tools which you use in development.
-
-Choose providers for abstract interfaces, connect those plugins to MirraSDK, and have an advantage of simplicity over complexity by implementing MirraSDK API instead of concrete plugins.
-
-Created by Roman Likhadievski ([romanlee17](https://github.com/romanlee17)) from Mirra Games.
 
 ## Supported Web platforms
 

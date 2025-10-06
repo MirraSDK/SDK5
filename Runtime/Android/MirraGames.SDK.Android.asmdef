@@ -1,0 +1,21 @@
+{
+    "name": "MirraGames.SDK.Android",
+    "rootNamespace": "MirraGames.SDK.Android",
+    "references": [
+        "MirraGames.SDK.Common"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_ANDROID"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -8,7 +8,9 @@
         "MirraGames.SDK.MirraWeb",
         "MirraGames.SDK.System",
         "MirraGames.SDK.UnityEngine",
-        "MirraGames.SDK.Addressables"
+        "MirraGames.SDK.Addressables",
+        "MirraGames.SDK.Android",
+        "MirraGames.SDK.iOS"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -20,6 +20,10 @@ namespace MirraGames.SDK.Common {
             CreateWarning(source, methodName, "not implemented");
         }
 
+        public static void NotAvailableWarning(object source, string methodName) {
+            CreateWarning(source, methodName, "not available");
+        }
+
         public static void CreateText(object source, params object[] content) {
             CreateText(source.GetType().Name, content);
         }

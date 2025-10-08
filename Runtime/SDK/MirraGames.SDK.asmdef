@@ -10,7 +10,8 @@
         "MirraGames.SDK.UnityEngine",
         "MirraGames.SDK.Addressables",
         "MirraGames.SDK.Android",
-        "MirraGames.SDK.iOS"
+        "MirraGames.SDK.iOS",
+        "MirraGames.SDK.RuStore"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

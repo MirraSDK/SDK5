@@ -21,6 +21,10 @@ namespace MirraGames.SDK.Common {
         public ProductData GetProductData(string productTag) {
             Logger.CreateText(this, nameof(GetProductData), productTag);
             try {
+                if (IsPaymentsAvailable == false) {
+                    Logger.NotAvailableWarning(this, nameof(GetProductData));
+                    return default;
+                }
                 return GetProductDataImpl(productTag);
             }
             catch (Exception exception) {
@@ -32,6 +36,10 @@ namespace MirraGames.SDK.Common {
         public bool IsAlreadyPurchased(string productTag) {
             Logger.CreateText(this, nameof(IsAlreadyPurchased), productTag);
             try {
+                if (IsPaymentsAvailable == false) {
+                    Logger.NotAvailableWarning(this, nameof(IsAlreadyPurchased));
+                    return false;
+                }
                 return IsAlreadyPurchasedImpl(productTag);
             }
             catch (Exception exception) {
@@ -43,6 +51,10 @@ namespace MirraGames.SDK.Common {
         public void Purchase(string productTag, Action onSuccess, Action onError = null) {
             Logger.CreateText(this, nameof(Purchase), productTag);
             try {
+                if (IsPaymentsAvailable == false) {
+                    Logger.NotAvailableWarning(this, nameof(Purchase));
+                    return;
+                }
                 void onSuccessCallback() {
                     Logger.CreateText(this, nameof(onSuccessCallback), productTag);
                     onSuccess?.Invoke();
@@ -62,6 +74,10 @@ namespace MirraGames.SDK.Common {
         public void RestorePurchases(Action<IRestoreData> onRestoreData) {
             Logger.CreateText(this, nameof(RestorePurchases));
             try {
+                if (IsPaymentsAvailable == false) {
+                    Logger.NotAvailableWarning(this, nameof(RestorePurchases));
+                    return;
+                }
                 void onRestoreDataCallback(IRestoreData restoreData) {
                     Logger.CreateText(this, nameof(onRestoreDataCallback));
                     onRestoreData?.Invoke(restoreData);

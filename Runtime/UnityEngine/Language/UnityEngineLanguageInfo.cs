@@ -1,13 +1,22 @@
 using MirraGames.SDK.Common;
 using UnityEngine;
 
-namespace MirraGames.SDK.UnityEngine {
+namespace MirraGames.SDK.UnityEngine
+{
 
     [Provider(typeof(ILanguageInfo))]
-    public class UnityEngineLanguageInfo : CommonLanguageInfo {
+    public class UnityEngineLanguageInfo : CommonLanguageInfo
+    {
 
-        protected override LanguageType GetCurrentImpl() {
-            return Application.systemLanguage switch {
+        public UnityEngineLanguageInfo() : base()
+        {
+            SetInitialized();
+        }
+
+        protected override LanguageType GetCurrentImpl()
+        {
+            return Application.systemLanguage switch
+            {
                 SystemLanguage.Russian => LanguageType.Russian,
                 SystemLanguage.Japanese => LanguageType.Japanese,
                 SystemLanguage.Chinese => LanguageType.Chinese,

@@ -19,6 +19,7 @@ namespace MirraGames.SDK.MirraWeb {
             typeof(GameDistribution_PropertyGroup),
             typeof(VK_PropertyGroup),
             typeof(OK_PropertyGroup),
+            typeof(LumixGames_PropertyGroup)
         };
 
         public override string AchievementsProviderName { get; } = nameof(MirraWebAchievements);

@@ -15,6 +15,7 @@ namespace MirraGames.SDK.MirraWeb {
         // [SerializeField] public YandexGames_PropertyGroup yandexGames;
         [SerializeField] public VK_PropertyGroup vk;
         [SerializeField] public OK_PropertyGroup ok;
+        [SerializeField] public LumixGames_PropertyGroup lumixGames;
         // [SerializeField] public GamePix_PropertyGroup gamePix;
         // [SerializeField] public Poki_PropertyGroup poki;
         // [SerializeField] public CoolMath_PropertyGroup coolMath;
@@ -29,6 +30,7 @@ namespace MirraGames.SDK.MirraWeb {
             // yandexGames = new YandexGames_PropertyGroup();
             vk = new VK_PropertyGroup();
             ok = new OK_PropertyGroup();
+            lumixGames = new LumixGames_PropertyGroup();
             // gamePix = new GamePix_PropertyGroup();
             // poki = new Poki_PropertyGroup();
             // coolMath = new CoolMath_PropertyGroup();
@@ -44,6 +46,7 @@ namespace MirraGames.SDK.MirraWeb {
             lagged = preferencesReader.GetPropertyGroup<Lagged_PropertyGroup>(configurationName);
             vk = preferencesReader.GetPropertyGroup<VK_PropertyGroup>(configurationName);
             ok = preferencesReader.GetPropertyGroup<OK_PropertyGroup>(configurationName);
+            lumixGames = preferencesReader.GetPropertyGroup<LumixGames_PropertyGroup>(configurationName);
         }
 
     }

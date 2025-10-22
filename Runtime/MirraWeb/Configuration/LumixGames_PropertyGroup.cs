@@ -9,19 +9,46 @@ namespace MirraGames.SDK.MirraWeb {
 
         public override string Name => "LumixGames";
 
+        [field: SerializeField] public bool isRussianDomain = false;
         [field: SerializeField] public AdSenseSettings adSense = new();
+        [field: SerializeField] public YandexAdsSettings yandexAds = new();
 
         public override StringProperty[] GetStringProperties() {
             return new StringProperty[] {
                 new(
-                    "Data Ad Client",
+                    "AdSense - Data Ad Client",
                     () => adSense.dataAdClient,
                     (value) => { adSense.dataAdClient = value; }
                 ),
                 new(
-                    "Data Ad Channel",
+                    "AdSense - Data Ad Channel",
                     () => adSense.dataAdChannel,
                     (value) => { adSense.dataAdChannel = value; }
+                ),
+                new(
+                    "Yandex Ads - App ID",
+                    () => yandexAds.appId,
+                    (value) => { yandexAds.appId = value; }
+                ),
+                new(
+                    "Yandex Ads - Interstitial Mobile ID",
+                    () => yandexAds.interstitialMobileId,
+                    (value) => { yandexAds.interstitialMobileId = value; }
+                ),
+                new(
+                    "Yandex Ads - Interstitial Desktop ID",
+                    () => yandexAds.interstitialDesktopId,
+                    (value) => { yandexAds.interstitialDesktopId = value; }
+                ),
+                new(
+                    "Yandex Ads - Rewarded Mobile ID",
+                    () => yandexAds.rewardedMobileId,
+                    (value) => { yandexAds.rewardedMobileId = value; }
+                ),
+                new(
+                    "Yandex Ads - Rewarded Desktop ID",
+                    () => yandexAds.rewardedDesktopId,
+                    (value) => { yandexAds.rewardedDesktopId = value; }
                 )
             };
         }
@@ -29,7 +56,12 @@ namespace MirraGames.SDK.MirraWeb {
         public override BoolProperty[] GetBoolProperties() {
             return new BoolProperty[] {
                 new(
-                    "Data Ad Break Test",
+                    "Is Russian Domain",
+                    () => isRussianDomain,
+                    (value) => { isRussianDomain = value; }
+                ),
+                new(
+                    "AdSense - Ad Break Test",
                     () => adSense.dataAdBreakTest,
                     (value) => { adSense.dataAdBreakTest = value; }
                 )
@@ -39,9 +71,14 @@ namespace MirraGames.SDK.MirraWeb {
         public override FloatProperty[] GetFloatProperties() {
             return new FloatProperty[] {
                 new(
-                    "Interstitial Interval (s)",
+                    "AdSense - Interstitial Interval (s)",
                     () => adSense.interstitialInterval,
                     (value) => { adSense.interstitialInterval = value; }
+                ),
+                new(
+                    "Yandex Ads - Interstitial Interval (s)",
+                    () => yandexAds.interstitialInterval,
+                    (value) => { yandexAds.interstitialInterval = value; }
                 )
             };
         }

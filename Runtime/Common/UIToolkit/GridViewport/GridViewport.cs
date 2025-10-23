@@ -8,7 +8,7 @@ namespace MirraGames.SDK.UIElements {
 
         private const string GridColorName = "Grid-Color";
         private static readonly Color GridColorDefault = new(0.13f, 0.13f, 0.13f);
-        private static readonly Color BackgroundColorDefault = new(0.2f, 0.2f, 0.2f);
+        private static readonly Color BackgroundColorDefault = new(0.2f, 0.2f, 0.2f, 0.5f);
 
         private const int LineVertexCount = 4;
         private const int LineIndexCount = 6;

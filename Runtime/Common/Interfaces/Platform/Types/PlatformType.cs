@@ -34,7 +34,8 @@ namespace MirraGames.SDK.Common {
         GamePix,
         MirraHub,
         PlaygamaBridge,
-        LumixGames
+        LumixGames,
+        WelwiseGames
     }
 
 }

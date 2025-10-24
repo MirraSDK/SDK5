@@ -11,7 +11,8 @@
         "MirraGames.SDK.Addressables",
         "MirraGames.SDK.Android",
         "MirraGames.SDK.iOS",
-        "MirraGames.SDK.RuStore"
+        "MirraGames.SDK.RuStore",
+        "MirraGames.SDK.YandexMobileAds"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

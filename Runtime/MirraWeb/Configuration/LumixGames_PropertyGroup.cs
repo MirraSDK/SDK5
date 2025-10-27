@@ -31,25 +31,10 @@ namespace MirraGames.SDK.MirraWeb {
                     (value) => { yandexAds.appId = value; }
                 ),
                 new(
-                    "Yandex Ads - Interstitial Mobile ID",
-                    () => yandexAds.interstitialMobileId,
-                    (value) => { yandexAds.interstitialMobileId = value; }
+                    "Yandex Ads - Block IDs Json",
+                    () => yandexAds.blockIdsJson,
+                    (value) => { yandexAds.blockIdsJson = value; }
                 ),
-                new(
-                    "Yandex Ads - Interstitial Desktop ID",
-                    () => yandexAds.interstitialDesktopId,
-                    (value) => { yandexAds.interstitialDesktopId = value; }
-                ),
-                new(
-                    "Yandex Ads - Rewarded Mobile ID",
-                    () => yandexAds.rewardedMobileId,
-                    (value) => { yandexAds.rewardedMobileId = value; }
-                ),
-                new(
-                    "Yandex Ads - Rewarded Desktop ID",
-                    () => yandexAds.rewardedDesktopId,
-                    (value) => { yandexAds.rewardedDesktopId = value; }
-                )
             };
         }
 

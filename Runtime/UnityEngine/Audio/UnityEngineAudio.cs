@@ -25,6 +25,7 @@ namespace MirraGames.SDK.UnityEngine {
         protected override void SetVolumeImpl(float volume) {
             AudioListener.volume = volume;
         }
+
     }
 
 }

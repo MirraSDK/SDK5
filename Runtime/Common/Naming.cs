@@ -52,6 +52,10 @@ namespace MirraGames.SDK.Common {
             return string.Join(".", subkeys);
         }
 
+        public static string Quote(string value) {
+            return $"'{value}'";
+        }
+
     }
 
 }

@@ -35,7 +35,12 @@ namespace MirraGames.SDK.Common {
         MirraHub,
         PlaygamaBridge,
         LumixGames,
-        WelwiseGames
+        WelwiseGames,
+        Playgama,
+        Facebook,
+        QATool,
+        Discord,
+        GamePush,
     }
 
 }

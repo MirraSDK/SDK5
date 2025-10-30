@@ -69,6 +69,16 @@ namespace MirraGames.SDK.Common {
         public void InvokeInterstitial(Action onOpen = null, Action<bool> onClose = null) {
             Logger.CreateText(this, nameof(InvokeInterstitial));
             try {
+                if (!IsInterstitialAvailable) {
+                    Logger.CreateError(this, "Interstitial not available");
+                    onClose?.Invoke(false);
+                    return;
+                }
+                if (IsInterstitialVisible) {
+                    Logger.CreateError(this, "Interstitial already visible");
+                    onClose?.Invoke(false);
+                    return;
+                }
                 void onOpenCallback() {
                     Logger.CreateText(this, nameof(onOpenCallback));
                     onOpen?.Invoke();
@@ -115,6 +125,16 @@ namespace MirraGames.SDK.Common {
         public void InvokeRewarded(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null) {
             Logger.CreateText(this, nameof(InvokeRewarded), rewardTag);
             try {
+                if (!IsRewardedAvailable) {
+                    Logger.CreateError(this, "Rewarded not available", rewardTag);
+                    onClose?.Invoke(false);
+                    return;
+                }
+                if (IsRewardedVisible) {
+                    Logger.CreateError(this, "Rewarded already visible", rewardTag);
+                    onClose?.Invoke(false);
+                    return;
+                }
                 void onOpenCallback() {
                     Logger.CreateText(this, nameof(onOpenCallback));
                     onOpen?.Invoke();

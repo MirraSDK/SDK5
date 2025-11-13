@@ -6,7 +6,7 @@ namespace MirraGames.SDK {
     [Root, Preserve]
     public partial class MirraSDK {
 
-        public const string Version = "5.0.14";
+        public const string Version = "5.0.15";
 
         private MirraSDK(MainFactory factory) {
             Logger.CreateText(this, $"Starting up. Version {Version}");

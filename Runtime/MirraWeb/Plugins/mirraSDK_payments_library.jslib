@@ -31,7 +31,7 @@ const mirraSDK_payments_library = {
         (async () => {
             await Module.mirraSDK.payments.updatePurchases();
             const purchasesJson = JSON.stringify({
-                purchases: Module.mirraSDK.payments.purchases
+                Purchases: Module.mirraSDK.payments.purchases
             });
             const purchasesJsonPtr = Module.allocateString(purchasesJson);
             Module.invokeMonoPCallback(senderId, onSuccessPtr, purchasesJsonPtr);

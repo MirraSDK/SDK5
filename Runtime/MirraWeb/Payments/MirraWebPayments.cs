@@ -2,6 +2,7 @@ using AOT;
 using MirraGames.SDK.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Logger = MirraGames.SDK.Common.Logger;
@@ -43,9 +44,11 @@ namespace MirraGames.SDK.MirraWeb {
 
         [MonoPInvokeCallback(typeof(DelegateString))]
         private static void OnUpdatePurchases(int senderId, string json) {
+            Logger.CreateText(nameof(MirraWebPayments), nameof(OnUpdatePurchases), Naming.Quote(json));
             try {
                 if (getPurchasesCallbacks.TryGetValue(senderId, out var info)) {
                     PurchasesArray purchasesArray = JsonUtility.FromJson<PurchasesArray>(json);
+                    Logger.CreateText(nameof(MirraWebPayments), nameof(OnUpdatePurchases), Naming.Quote(string.Join(", ", purchasesArray.Purchases)));
                     info.onSuccess?.Invoke(purchasesArray.Purchases);
                 }
             }
@@ -97,6 +100,7 @@ namespace MirraGames.SDK.MirraWeb {
             int senderId = getPurchasesCallbacks.Count;
             getPurchasesCallbacks[senderId] = new() {
                 onSuccess = (purchases) => {
+                    Logger.CreateText(nameof(MirraWebPayments), nameof(RestorePurchasesImpl), "onSuccess", purchases);
                     Purchases = purchases;
                     IRestoreData restoreData = new RestoreData(this, Purchases);
                     onRestoreData?.Invoke(restoreData);

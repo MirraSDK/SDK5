@@ -96,14 +96,19 @@ namespace MirraGames.SDK.Editor {
 
         private enum NavigationItem {
             Configurations,
-            PackageManager,
+            // PackageManager,
             BuildAutomation
         }
 
         private const float NavigationPaddingLeft = 15.0f;
 
         private static NavigationItem CurrentNavigationItem {
-            get => (NavigationItem)EditorPrefs.GetInt($"{PackageTools.ProjectId}.{nameof(CurrentNavigationItem)}", 0);
+            get {
+                int itemId = EditorPrefs.GetInt($"{PackageTools.ProjectId}.{nameof(CurrentNavigationItem)}", 0);
+                int minItemId = 0;
+                int maxItemId = Enum.GetNames(typeof(NavigationItem)).Length - 1;
+                return (NavigationItem)Mathf.Clamp(itemId, minItemId, maxItemId);
+            }
             set => EditorPrefs.SetInt($"{PackageTools.ProjectId}.{nameof(CurrentNavigationItem)}", (int)value);
         }
 
@@ -143,10 +148,10 @@ namespace MirraGames.SDK.Editor {
                     ShowConfigurations();
                     break;
                 }
-                case NavigationItem.PackageManager: {
-                    ShowPackageManager();
-                    break;
-                }
+                //case NavigationItem.PackageManager: {
+                //    ShowPackageManager();
+                //    break;
+                //}
                 case NavigationItem.BuildAutomation: {
                     ShowBuildAutomation();
                     break;

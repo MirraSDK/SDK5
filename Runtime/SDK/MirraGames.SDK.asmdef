@@ -13,7 +13,8 @@
         "MirraGames.SDK.iOS",
         "MirraGames.SDK.RuStore",
         "MirraGames.SDK.YandexMobileAds",
-        "MirraGames.SDK.Playgama"
+        "MirraGames.SDK.Playgama",
+        "MirraGames.SDK.AppLovin"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

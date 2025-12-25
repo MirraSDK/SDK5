@@ -6,9 +6,9 @@ namespace MirraGames.SDK.Common {
 
         static Logger() {
 #if UNITY_EDITOR
-            EnableTextMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableTextMessages)}");
-            EnableWarningMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableWarningMessages)}");
-            EnableErrorMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableErrorMessages)}");
+            EnableTextMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableTextMessages)}", true);
+            EnableWarningMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableWarningMessages)}", true);
+            EnableErrorMessages = UnityEditor.EditorPrefs.GetBool($"{Naming.MirraSDK5}.{nameof(EnableErrorMessages)}", true);
 #endif
         }
 

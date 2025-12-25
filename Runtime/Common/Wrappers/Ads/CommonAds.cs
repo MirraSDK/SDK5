@@ -69,6 +69,7 @@ namespace MirraGames.SDK.Common {
         public void InvokeInterstitial(Action onOpen = null, Action<bool> onClose = null) {
             Logger.CreateText(this, nameof(InvokeInterstitial));
             try {
+                // Check availability
                 if (!IsInterstitialAvailable) {
                     Logger.CreateError(this, "Interstitial not available");
                     onClose?.Invoke(false);
@@ -79,6 +80,26 @@ namespace MirraGames.SDK.Common {
                     onClose?.Invoke(false);
                     return;
                 }
+                // Hard limit to one show per 120 seconds (checking last success from both interstitial and rewarded)
+                DateTime lastInterstitialSuccess = this.lastInterstitialSuccess ?? DateTime.MinValue;
+                DateTime lastRewardedSuccess = this.lastRewardedSuccess ?? DateTime.MinValue;
+                TimeSpan interstitialTimeSpan = DateTime.Now - lastInterstitialSuccess;
+                TimeSpan rewardedTimeSpan = DateTime.Now - lastRewardedSuccess;
+                double interstitialSeconds = interstitialTimeSpan.TotalSeconds;
+                double rewardedSeconds = rewardedTimeSpan.TotalSeconds;
+                if (interstitialSeconds < 120.0)
+                {
+                    Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Interstitial. Currently it's been", interstitialSeconds, "seconds");
+                    onClose?.Invoke(false);
+                    return;
+                }
+                if(rewardedSeconds < 120.0)
+                {
+                    Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Rewarded. Currently it's been", rewardedSeconds, "seconds");
+                    onClose?.Invoke(false);
+                    return;
+                }
+                // Invoke interstitial
                 void onOpenCallback() {
                     Logger.CreateText(this, nameof(onOpenCallback));
                     onOpen?.Invoke();

@@ -46,13 +46,13 @@ namespace MirraGames.SDK.Editor {
         }
 
         private static void Toggle(string key) {
-            bool current = EditorPrefs.GetBool(key, false);
+            bool current = EditorPrefs.GetBool(key, true);
             EditorPrefs.SetBool(key, !current);
             Menu.SetChecked(MenuRoot, false);
         }
 
         private static void Validate(string key, string menuPath) {
-            bool current = EditorPrefs.GetBool(key, false);
+            bool current = EditorPrefs.GetBool(key, true);
             Menu.SetChecked(menuPath, current);
         }
 

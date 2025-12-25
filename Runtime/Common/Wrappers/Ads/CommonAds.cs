@@ -81,23 +81,27 @@ namespace MirraGames.SDK.Common {
                     return;
                 }
                 // Hard limit to one show per 120 seconds (checking last success from both interstitial and rewarded)
-                DateTime lastInterstitialSuccess = this.lastInterstitialSuccess ?? DateTime.MinValue;
-                DateTime lastRewardedSuccess = this.lastRewardedSuccess ?? DateTime.MinValue;
-                TimeSpan interstitialTimeSpan = DateTime.Now - lastInterstitialSuccess;
-                TimeSpan rewardedTimeSpan = DateTime.Now - lastRewardedSuccess;
-                double interstitialSeconds = interstitialTimeSpan.TotalSeconds;
-                double rewardedSeconds = rewardedTimeSpan.TotalSeconds;
-                if (interstitialSeconds < 120.0)
+                if (lastInterstitialSuccess.HasValue)
                 {
-                    Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Interstitial. Currently it's been", interstitialSeconds, "seconds");
-                    onClose?.Invoke(false);
-                    return;
+                    TimeSpan interstitialTimeSpan = DateTime.Now - lastInterstitialSuccess.Value;
+                    double interstitialSeconds = interstitialTimeSpan.TotalSeconds;
+                    if (interstitialSeconds < 120.0)
+                    {
+                        Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Interstitial. Currently it's been", interstitialSeconds, "seconds");
+                        onClose?.Invoke(false);
+                        return;
+                    }
                 }
-                if(rewardedSeconds < 120.0)
+                if (lastRewardedSuccess.HasValue)
                 {
-                    Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Rewarded. Currently it's been", rewardedSeconds, "seconds");
-                    onClose?.Invoke(false);
-                    return;
+                    TimeSpan rewardedTimeSpan = DateTime.Now - lastRewardedSuccess.Value;
+                    double rewardedSeconds = rewardedTimeSpan.TotalSeconds;
+                    if (rewardedSeconds < 120.0)
+                    {
+                        Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Rewarded. Currently it's been", rewardedSeconds, "seconds");
+                        onClose?.Invoke(false);
+                        return;
+                    }
                 }
                 // Invoke interstitial
                 void onOpenCallback() {

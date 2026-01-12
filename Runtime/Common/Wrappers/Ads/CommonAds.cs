@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace MirraGames.SDK.Common {
+namespace MirraGames.SDK.Common
+{
 
     [Awaitable, Wrapper]
-    public abstract partial class CommonAds : IAds {
+    public abstract partial class CommonAds : IAds
+    {
 
         protected readonly IEventAggregator eventAggregator;
 
-        public CommonAds(IEventAggregator eventAggregator) {
+        public CommonAds(IEventAggregator eventAggregator)
+        {
             this.eventAggregator = eventAggregator;
         }
 
@@ -22,32 +25,41 @@ namespace MirraGames.SDK.Common {
         protected abstract void RefreshBannerImpl();
         protected abstract void DisableBannerImpl();
 
-        public void InvokeBanner() {
+        public void InvokeBanner()
+        {
             Logger.CreateText(this, nameof(InvokeBanner));
-            try {
+            try
+            {
                 InvokeBannerImpl();
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.CreateError(this, nameof(InvokeBanner), exception);
             }
         }
 
-        public void RefreshBanner() {
+        public void RefreshBanner()
+        {
             Logger.CreateText(this, nameof(RefreshBanner));
-            try {
+            try
+            {
                 RefreshBannerImpl();
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.CreateError(this, nameof(RefreshBanner), exception);
             }
         }
 
-        public void DisableBanner() {
+        public void DisableBanner()
+        {
             Logger.CreateText(this, nameof(DisableBanner));
-            try {
+            try
+            {
                 DisableBannerImpl();
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.CreateError(this, nameof(DisableBanner), exception);
             }
         }
@@ -60,35 +72,41 @@ namespace MirraGames.SDK.Common {
         public virtual bool IsInterstitialVisible { get; protected set; }
         public virtual bool IsInterstitialAvailable { get; }
 
-        protected abstract void InvokeInterstitialImpl(Action onOpen = null, Action<bool> onClose = null);
+        protected abstract void InvokeInterstitialImpl(InterstitialParameters parameters, Action onOpen, Action<bool> onClose);
 
-        public DateTime? GetLastInterstitialSuccess() {
+        public DateTime? GetLastInterstitialSuccess()
+        {
             return lastInterstitialSuccess;
         }
 
-        public void InvokeInterstitial(Action onOpen = null, Action<bool> onClose = null) {
-            Logger.CreateText(this, nameof(InvokeInterstitial));
-            try {
+        public void InvokeInterstitial(InterstitialParameters parameters)
+        {
+            Logger.CreateText(this, nameof(InvokeInterstitial), parameters.PlacementId);
+            try
+            {
                 // Check availability
-                if (!IsInterstitialAvailable) {
+                if (!IsInterstitialAvailable)
+                {
                     Logger.CreateError(this, "Interstitial not available");
-                    onClose?.Invoke(false);
+                    parameters.OnClose?.Invoke(false);
                     return;
                 }
-                if (IsInterstitialVisible) {
+                if (IsInterstitialVisible)
+                {
                     Logger.CreateError(this, "Interstitial already visible");
-                    onClose?.Invoke(false);
+                    parameters.OnClose?.Invoke(false);
                     return;
                 }
-                // Hard limit to one show per 120 seconds (checking last success from both interstitial and rewarded)
+                // Hard limit to one show per specified seconds
+                // (checking last success from both interstitial and rewarded)
                 if (lastInterstitialSuccess.HasValue)
                 {
                     TimeSpan interstitialTimeSpan = DateTime.Now - lastInterstitialSuccess.Value;
                     double interstitialSeconds = interstitialTimeSpan.TotalSeconds;
-                    if (interstitialSeconds < 120.0)
+                    if (interstitialSeconds < parameters.AdsIntervalSeconds)
                     {
-                        Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Interstitial. Currently it's been", interstitialSeconds, "seconds");
-                        onClose?.Invoke(false);
+                        Logger.CreateError(this, "Interstitial frequency capped (interstitial)", parameters.AdsIntervalSeconds - interstitialSeconds, "seconds left");
+                        parameters.OnClose?.Invoke(false);
                         return;
                     }
                 }
@@ -96,34 +114,49 @@ namespace MirraGames.SDK.Common {
                 {
                     TimeSpan rewardedTimeSpan = DateTime.Now - lastRewardedSuccess.Value;
                     double rewardedSeconds = rewardedTimeSpan.TotalSeconds;
-                    if (rewardedSeconds < 120.0)
+                    if (rewardedSeconds < parameters.AdsIntervalSeconds)
                     {
-                        Logger.CreateError(this, "Interstitial capped to once per 120 seconds since last Rewarded. Currently it's been", rewardedSeconds, "seconds");
-                        onClose?.Invoke(false);
+                        Logger.CreateError(this, "Interstitial frequency capped (rewarded)", parameters.AdsIntervalSeconds - rewardedSeconds, "seconds left");
+                        parameters.OnClose?.Invoke(false);
                         return;
                     }
                 }
                 // Invoke interstitial
-                void onOpenCallback() {
+                void onOpenCallback()
+                {
                     Logger.CreateText(this, nameof(onOpenCallback));
-                    onOpen?.Invoke();
+                    parameters.OnOpen?.Invoke();
                     PauseSourceEvent pauseSourceEvent = new(nameof(InvokeInterstitial), true);
                     eventAggregator.Publish(this, pauseSourceEvent);
                 }
-                void onCloseCallback(bool isSuccess) {
+                void onCloseCallback(bool isSuccess)
+                {
                     Logger.CreateText(this, nameof(onCloseCallback), isSuccess);
-                    onClose?.Invoke(isSuccess);
-                    if (isSuccess) {
+                    parameters.OnClose?.Invoke(isSuccess);
+                    if (isSuccess)
+                    {
                         lastInterstitialSuccess = DateTime.Now;
                     }
                     PauseSourceEvent pauseSourceEvent = new(nameof(InvokeInterstitial), false);
                     eventAggregator.Publish(this, pauseSourceEvent);
                 }
-                InvokeInterstitialImpl(onOpenCallback, onCloseCallback);
+                InvokeInterstitialImpl(parameters, onOpenCallback, onCloseCallback);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.CreateError(this, nameof(InvokeInterstitial), exception);
             }
+        }
+
+        public void InvokeInterstitial(Action onOpen = null, Action<bool> onClose = null)
+        {
+            Logger.CreateText(this, nameof(InvokeInterstitial));
+            InterstitialParameters parameters = new()
+            {
+                OnOpen = onOpen,
+                OnClose = onClose
+            };
+            InvokeInterstitial(parameters);
         }
 
         // Rewarded
@@ -135,54 +168,79 @@ namespace MirraGames.SDK.Common {
         public virtual bool IsRewardedVisible { get; protected set; }
         public virtual bool IsRewardedAvailable { get; }
 
-        protected abstract void InvokeRewardedImpl(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null);
+        protected abstract void InvokeRewardedImpl(RewardedParameters parameters, Action onOpen, Action<bool> onClose);
 
-        public DateTime? GetLastRewardedSuccess(string rewardTag = null) {
-            if (string.IsNullOrEmpty(rewardTag)) {
+        public DateTime? GetLastRewardedSuccess(string rewardTag = null)
+        {
+            if (string.IsNullOrEmpty(rewardTag))
+            {
                 return lastRewardedSuccess;
             }
-            if (lastRewardedSuccessByTag.TryGetValue(rewardTag, out var dateTime)) {
+            if (lastRewardedSuccessByTag.TryGetValue(rewardTag, out var dateTime))
+            {
                 return dateTime;
             }
             return null;
         }
 
-        public void InvokeRewarded(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null) {
-            Logger.CreateText(this, nameof(InvokeRewarded), rewardTag);
-            try {
-                if (!IsRewardedAvailable) {
-                    Logger.CreateError(this, "Rewarded not available", rewardTag);
-                    onClose?.Invoke(false);
+        public void InvokeRewarded(RewardedParameters parameters)
+        {
+            Logger.CreateText(this, nameof(InvokeRewarded), parameters.PlacementId);
+            try
+            {
+                // Check availability
+                if (!IsRewardedAvailable)
+                {
+                    Logger.CreateError(this, "Rewarded not available");
+                    parameters.OnClose?.Invoke(false);
                     return;
                 }
-                if (IsRewardedVisible) {
-                    Logger.CreateError(this, "Rewarded already visible", rewardTag);
-                    onClose?.Invoke(false);
+                if (IsRewardedVisible)
+                {
+                    Logger.CreateError(this, "Rewarded already visible");
+                    parameters.OnClose?.Invoke(false);
                     return;
                 }
-                void onOpenCallback() {
+                // Invoke rewarded
+                void onOpenCallback()
+                {
                     Logger.CreateText(this, nameof(onOpenCallback));
-                    onOpen?.Invoke();
+                    parameters.OnOpen?.Invoke();
                     PauseSourceEvent pauseSourceEvent = new(nameof(InvokeRewarded), true);
                     eventAggregator.Publish(this, pauseSourceEvent);
                 }
-                void onCloseCallback(bool isSuccess) {
+                void onCloseCallback(bool isSuccess)
+                {
                     Logger.CreateText(this, nameof(onCloseCallback), isSuccess);
-                    onClose?.Invoke(isSuccess);
-                    if (isSuccess) {
+                    parameters.OnClose?.Invoke(isSuccess);
+                    if (isSuccess)
+                    {
                         lastRewardedSuccess = DateTime.Now;
-                        if (!string.IsNullOrEmpty(rewardTag)) {
-                            lastRewardedSuccessByTag[rewardTag] = lastRewardedSuccess;
+                        if (!string.IsNullOrEmpty(parameters.PlacementId))
+                        {
+                            lastRewardedSuccessByTag[parameters.PlacementId] = lastRewardedSuccess;
                         }
                     }
                     PauseSourceEvent pauseSourceEvent = new(nameof(InvokeRewarded), false);
                     eventAggregator.Publish(this, pauseSourceEvent);
                 }
-                InvokeRewardedImpl(onOpenCallback, onCloseCallback, rewardTag);
+                InvokeRewardedImpl(parameters, onOpenCallback, onCloseCallback);
             }
-            catch (Exception exception) {
-                Logger.CreateError(this, nameof(InvokeRewarded), exception, rewardTag);
+            catch (Exception exception)
+            {
+                Logger.CreateError(this, nameof(InvokeRewarded), exception);
             }
+        }
+
+        public void InvokeRewarded(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null)
+        {
+            RewardedParameters parameters = new()
+            {
+                OnOpen = onOpen,
+                OnClose = onClose,
+                PlacementId = rewardTag
+            };
+            InvokeRewarded(parameters);
         }
 
     }

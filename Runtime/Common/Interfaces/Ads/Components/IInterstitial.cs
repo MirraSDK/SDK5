@@ -1,8 +1,10 @@
 using System;
 
-namespace MirraGames.SDK.Common {
+namespace MirraGames.SDK.Common
+{
 
-    public interface IInterstitial {
+    public interface IInterstitial
+    {
 
         bool IsInterstitialReady { get; }
         bool IsInterstitialVisible { get; }
@@ -10,6 +12,7 @@ namespace MirraGames.SDK.Common {
 
         DateTime? GetLastInterstitialSuccess();
         void InvokeInterstitial(Action onOpen = null, Action<bool> onClose = null);
+        void InvokeInterstitial(InterstitialParameters parameters);
 
     }
 

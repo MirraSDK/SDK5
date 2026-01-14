@@ -84,7 +84,7 @@ namespace MirraGames.SDK.Prototype {
         public override bool IsInterstitialVisible { get; protected set; } = false;
         public override bool IsInterstitialAvailable { get; } = true;
 
-        protected override void InvokeInterstitialImpl(Action onOpen = null, Action<bool> onClose = null) {
+        protected override void InvokeInterstitialImpl(InterstitialParameters parameters, Action onOpen, Action<bool> onClose) {
             if (IsInterstitialVisible) {
                 Logger.CreateWarning(this, "Interstitial is already visible");
                 onClose?.Invoke(false);
@@ -101,7 +101,7 @@ namespace MirraGames.SDK.Prototype {
         public override bool IsRewardedVisible { get; protected set; } = false;
         public override bool IsRewardedAvailable { get; } = true;
 
-        protected override void InvokeRewardedImpl(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null) {
+        protected override void InvokeRewardedImpl(RewardedParameters parameters, Action onOpen, Action<bool> onClose) {
             if (IsRewardedVisible) {
                 Logger.CreateWarning(this, "Rewarded is already visible");
                 onClose?.Invoke(false);

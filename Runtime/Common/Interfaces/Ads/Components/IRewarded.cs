@@ -10,6 +10,7 @@ namespace MirraGames.SDK.Common {
 
         DateTime? GetLastRewardedSuccess(string rewardTag = null);
         void InvokeRewarded(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null);
+        void InvokeRewarded(RewardedParameters parameters);
 
     }
 

@@ -7,6 +7,6 @@ namespace MirraGames.SDK.Common
         public Action OnOpen = null;
         public Action<bool> OnClose = null;
         public string PlacementId = string.Empty;
-        public int AdsIntervalSeconds = 120;
+        public int AdsIntervalSeconds = 0;
     }
 }

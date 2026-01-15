@@ -132,7 +132,7 @@ namespace MirraGames.SDK.MirraWeb {
             get => mirraSDK_ads_isInterstitialAvailable();
         }
 
-        protected override void InvokeInterstitialImpl(Action onOpen = null, Action<bool> onClose = null) {
+        protected override void InvokeInterstitialImpl(InterstitialParameters parameters, Action onOpen, Action<bool> onClose) {
             int senderId = invokeInterstitialInfo.Count;
             invokeInterstitialInfo[senderId] = new InvokeInterstitialInfo() {
                 onOpen = onOpen,
@@ -155,10 +155,10 @@ namespace MirraGames.SDK.MirraWeb {
             get => mirraSDK_ads_isRewardedAvailable();
         }
 
-        protected override void InvokeRewardedImpl(Action onOpen = null, Action<bool> onClose = null, string rewardTag = null) {
+        protected override void InvokeRewardedImpl(RewardedParameters parameters, Action onOpen, Action<bool> onClose) {
             int senderId = invokeRewardedInfo.Count;
             invokeRewardedInfo[senderId] = new InvokeRewardedInfo() {
-                rewardTag = rewardTag,
+                rewardTag = parameters.PlacementId,
                 onOpen = onOpen,
                 onClose = onClose
             };

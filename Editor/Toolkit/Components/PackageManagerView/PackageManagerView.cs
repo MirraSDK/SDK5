@@ -14,6 +14,7 @@ namespace MirraGames.SDK.Editor
     {
         public class PackageCardInfo
         {
+            public string RepositoryHandle;
             public PackageInfo Info;
             public Texture2D Icon;
             public string Readme;
@@ -61,6 +62,7 @@ namespace MirraGames.SDK.Editor
             };
             PackageCardInfo cardInfo = new()
             {
+                RepositoryHandle = repositoryHandle,
                 Info = packageInfo
             };
             PackageCards.Add(card, cardInfo);
@@ -118,7 +120,8 @@ namespace MirraGames.SDK.Editor
             };
             installButton.clicked += () =>
             {
-
+                string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                UnityEditor.PackageManager.Client.Add(packageGitUrl);
             };
 
             Button updateButton = new()
@@ -127,7 +130,8 @@ namespace MirraGames.SDK.Editor
             };
             updateButton.clicked += () =>
             {
-
+                string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                UnityEditor.PackageManager.Client.Add(packageGitUrl);
             };
 
             Button removeButton = new()
@@ -136,7 +140,7 @@ namespace MirraGames.SDK.Editor
             };
             removeButton.clicked += () =>
             {
-
+                UnityEditor.PackageManager.Client.Remove(cardInfo.Info.name);
             };
 
             PackageManagerInspector.ActionButtonsElement.Clear();
@@ -191,6 +195,11 @@ namespace MirraGames.SDK.Editor
         private string GetPackageReadmeUrl(string repositoryHandle)
         {
             return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/README.md";
+        }
+
+        private string GetPackageGitUrl(string repositoryHandle)
+        {
+            return $"https://github.com/{repositoryHandle}.git";
         }
 
         private async Task<string> GetPackageReadme(string repositoryHandle)

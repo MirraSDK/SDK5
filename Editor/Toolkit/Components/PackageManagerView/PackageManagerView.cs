@@ -87,21 +87,71 @@ namespace MirraGames.SDK.Editor
 
             card.RegisterCallback<ClickEvent>(callback =>
             {
-                DeselectCards();
-                card.Select();
-                string description = PackageCards[card].Info.description;
-                if (string.IsNullOrEmpty(description))
-                {
-                    description = Naming.Dash;
-                }
-                string readme = PackageCards[card].Readme;
-                if (string.IsNullOrEmpty(readme))
-                {
-                    readme = Naming.Dash;
-                }
-                PackageManagerInspector.DescriptionLabel.text = description;
-                PackageManagerInspector.ReadmeLabel.text = readme;
+                SelectCard(card);
             });
+        }
+
+        private void SelectCard(HorizontalCard card)
+        {
+            DeselectCards();
+            card.Select();
+
+            string description = PackageCards[card].Info.description;
+            if (string.IsNullOrEmpty(description))
+            {
+                description = Naming.Dash;
+            }
+            PackageManagerInspector.DescriptionLabel.text = description;
+
+            string readme = PackageCards[card].Readme;
+            if (string.IsNullOrEmpty(readme))
+            {
+                readme = Naming.Dash;
+            }
+            PackageManagerInspector.ReadmeLabel.text = readme;
+
+            PackageCardInfo cardInfo = PackageCards[card];
+
+            Button installButton = new()
+            {
+                text = $"Install {cardInfo.Info.displayName}"
+            };
+            installButton.clicked += () =>
+            {
+
+            };
+
+            Button updateButton = new()
+            {
+                text = $"Update {cardInfo.Info.displayName} to {cardInfo.Info.version}"
+            };
+            updateButton.clicked += () =>
+            {
+
+            };
+
+            Button removeButton = new()
+            {
+                text = $"Remove {cardInfo.Info.displayName}"
+            };
+            removeButton.clicked += () =>
+            {
+
+            };
+
+            PackageManagerInspector.ActionButtonsElement.Clear();
+            if (IsPackageInstalled(cardInfo.Info.name))
+            {
+                if (GetLocalPackageVersion(cardInfo.Info.name) != cardInfo.Info.version)
+                {
+                    PackageManagerInspector.ActionButtonsElement.Add(updateButton);
+                }
+                PackageManagerInspector.ActionButtonsElement.Add(removeButton);
+            }
+            else
+            {
+                PackageManagerInspector.ActionButtonsElement.Add(installButton);
+            }
         }
 
         private void DeselectCards()

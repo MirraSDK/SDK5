@@ -14,6 +14,7 @@ namespace MirraGames.SDK.Editor
     {
         public class PackageCardInfo
         {
+            public string RepositoryHandle;
             public PackageInfo Info;
             public Texture2D Icon;
             public string Readme;
@@ -61,6 +62,7 @@ namespace MirraGames.SDK.Editor
             };
             PackageCardInfo cardInfo = new()
             {
+                RepositoryHandle = repositoryHandle,
                 Info = packageInfo
             };
             PackageCards.Add(card, cardInfo);
@@ -87,21 +89,74 @@ namespace MirraGames.SDK.Editor
 
             card.RegisterCallback<ClickEvent>(callback =>
             {
-                DeselectCards();
-                card.Select();
-                string description = PackageCards[card].Info.description;
-                if (string.IsNullOrEmpty(description))
-                {
-                    description = Naming.Dash;
-                }
-                string readme = PackageCards[card].Readme;
-                if (string.IsNullOrEmpty(readme))
-                {
-                    readme = Naming.Dash;
-                }
-                PackageManagerInspector.DescriptionLabel.text = description;
-                PackageManagerInspector.ReadmeLabel.text = readme;
+                SelectCard(card);
             });
+        }
+
+        private void SelectCard(HorizontalCard card)
+        {
+            DeselectCards();
+            card.Select();
+
+            string description = PackageCards[card].Info.description;
+            if (string.IsNullOrEmpty(description))
+            {
+                description = Naming.Dash;
+            }
+            PackageManagerInspector.DescriptionLabel.text = description;
+
+            string readme = PackageCards[card].Readme;
+            if (string.IsNullOrEmpty(readme))
+            {
+                readme = Naming.Dash;
+            }
+            PackageManagerInspector.ReadmeLabel.text = readme;
+
+            PackageCardInfo cardInfo = PackageCards[card];
+
+            Button installButton = new()
+            {
+                text = $"Install {cardInfo.Info.displayName}"
+            };
+            installButton.clicked += () =>
+            {
+                string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                UnityEditor.PackageManager.Client.Add(packageGitUrl);
+                Logger.CreateWarning(this, "Wait a few seconds! Unity Package Manager should start installing", cardInfo.Info.displayName);
+            };
+
+            Button updateButton = new()
+            {
+                text = $"Update {cardInfo.Info.displayName} to {cardInfo.Info.version}"
+            };
+            updateButton.clicked += () =>
+            {
+                string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                UnityEditor.PackageManager.Client.Add(packageGitUrl);
+            };
+
+            Button removeButton = new()
+            {
+                text = $"Remove {cardInfo.Info.displayName}"
+            };
+            removeButton.clicked += () =>
+            {
+                UnityEditor.PackageManager.Client.Remove(cardInfo.Info.name);
+            };
+
+            PackageManagerInspector.ActionButtonsElement.Clear();
+            if (IsPackageInstalled(cardInfo.Info.name))
+            {
+                if (GetLocalPackageVersion(cardInfo.Info.name) != cardInfo.Info.version)
+                {
+                    PackageManagerInspector.ActionButtonsElement.Add(updateButton);
+                }
+                PackageManagerInspector.ActionButtonsElement.Add(removeButton);
+            }
+            else
+            {
+                PackageManagerInspector.ActionButtonsElement.Add(installButton);
+            }
         }
 
         private void DeselectCards()
@@ -141,6 +196,11 @@ namespace MirraGames.SDK.Editor
         private string GetPackageReadmeUrl(string repositoryHandle)
         {
             return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/README.md";
+        }
+
+        private string GetPackageGitUrl(string repositoryHandle)
+        {
+            return $"https://github.com/{repositoryHandle}.git";
         }
 
         private async Task<string> GetPackageReadme(string repositoryHandle)

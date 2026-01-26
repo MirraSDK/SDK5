@@ -15,6 +15,11 @@ namespace MirraGames.SDK.Editor
             ReadmeLabel.text = Naming.Dash;
         }
 
+        public VisualElement ActionButtonsElement
+        {
+            get => this.Q<VisualElement>(nameof(ActionButtonsElement));
+        }
+
         public Label DescriptionLabel
         {
             get => this.Q<Label>(nameof(DescriptionLabel));

@@ -239,11 +239,14 @@ namespace MirraGames.SDK.Editor
         #region Package Manager
 
         private PackageManagerView packageManagerView;
+        private PackageManagerInspector packageManagerInspector;
 
         private void ShowPackageManager()
         {
-            packageManagerView ??= new PackageManagerView();
+            packageManagerInspector ??= new PackageManagerInspector();
+            packageManagerView ??= new PackageManagerView(packageManagerInspector);
             toolkitViewport.Add(packageManagerView);
+            toolkitInspector.Add(packageManagerInspector);
         }
 
         #endregion

@@ -12,10 +12,19 @@ namespace MirraGames.SDK.Editor
 {
     internal partial class PackageManagerView : VisualElement
     {
-        private readonly List<HorizontalCard> PackageCards = new();
-
-        public PackageManagerView()
+        public class PackageCardInfo
         {
+            public PackageInfo Info;
+            public Texture2D Icon;
+            public string Readme;
+        }
+
+        private readonly PackageManagerInspector PackageManagerInspector;
+        private readonly Dictionary<HorizontalCard, PackageCardInfo> PackageCards = new();
+
+        public PackageManagerView(PackageManagerInspector packageManagerInspector)
+        {
+            PackageManagerInspector = packageManagerInspector;
             VisualTreeReference reference = VisualTreeReference.Load(nameof(PackageManagerView));
             VisualTreeAsset asset = reference.VisualTree;
             asset.CloneTree(this);
@@ -50,7 +59,11 @@ namespace MirraGames.SDK.Editor
                 LetterText = packageInfo.displayName[..1].ToUpper(),
                 HintText = isPackageInstalled ? $"Available: {packageInfo.version}\nInstalled: {localPackageVersion}" : $"Available: {packageInfo.version}\nNot installed"
             };
-            PackageCards.Add(card);
+            PackageCardInfo cardInfo = new()
+            {
+                Info = packageInfo
+            };
+            PackageCards.Add(card, cardInfo);
             contentContainer.Add(card);
 
             Task<Texture2D> packageIcon = GetPackagePng(repositoryHandle);
@@ -58,7 +71,17 @@ namespace MirraGames.SDK.Editor
             {
                 if (task.Result != null)
                 {
+                    cardInfo.Icon = task.Result;
                     card.SetIcon(task.Result);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            Task<string> packageReadme = GetPackageReadme(repositoryHandle);
+            _ = packageReadme.ContinueWith(task =>
+            {
+                if (task.Result != null)
+                {
+                    cardInfo.Readme = task.Result;
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -66,12 +89,24 @@ namespace MirraGames.SDK.Editor
             {
                 DeselectCards();
                 card.Select();
+                string description = PackageCards[card].Info.description;
+                if (string.IsNullOrEmpty(description))
+                {
+                    description = Naming.Dash;
+                }
+                string readme = PackageCards[card].Readme;
+                if (string.IsNullOrEmpty(readme))
+                {
+                    readme = Naming.Dash;
+                }
+                PackageManagerInspector.DescriptionLabel.text = description;
+                PackageManagerInspector.ReadmeLabel.text = readme;
             });
         }
 
         private void DeselectCards()
         {
-            foreach (HorizontalCard card in PackageCards)
+            foreach (HorizontalCard card in PackageCards.Keys)
             {
                 card.Deselect();
             }
@@ -101,6 +136,22 @@ namespace MirraGames.SDK.Editor
         private string GetPackagePngUrl(string repositoryHandle)
         {
             return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/package.png";
+        }
+
+        private string GetPackageReadmeUrl(string repositoryHandle)
+        {
+            return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/README.md";
+        }
+
+        private async Task<string> GetPackageReadme(string repositoryHandle)
+        {
+            string readmeUrl = GetPackageReadmeUrl(repositoryHandle);
+            byte[] data = await Get(readmeUrl);
+            if (data == null)
+            {
+                return null;
+            }
+            return Encoding.UTF8.GetString(data);
         }
 
         private async Task<Texture2D> GetPackagePng(string repositoryHandle)

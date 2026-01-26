@@ -11,8 +11,8 @@ namespace MirraGames.SDK.Editor
             VisualTreeAsset asset = reference.VisualTree;
             asset.CloneTree(this);
 
-            DescriptionLabel.text = string.Empty;
-            ReadmeLabel.text = string.Empty;
+            DescriptionLabel.text = Naming.Dash;
+            ReadmeLabel.text = Naming.Dash;
         }
 
         public Label DescriptionLabel

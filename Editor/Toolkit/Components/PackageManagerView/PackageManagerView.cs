@@ -169,13 +169,30 @@ namespace MirraGames.SDK.Editor
 
         private bool IsPackageInstalled(string packageName)
         {
-            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
+            return GetInstalledPackageInfo(packageName) != null;
         }
 
         private string GetLocalPackageVersion(string packageName)
         {
-            UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName);
+            UnityEditor.PackageManager.PackageInfo packageInfo = GetInstalledPackageInfo(packageName);
             return packageInfo?.version;
+        }
+
+        private UnityEditor.PackageManager.PackageInfo GetInstalledPackageInfo(string packageName)
+        {
+#if UNITY_2022_2_OR_NEWER
+            UnityEditor.PackageManager.PackageInfo[] packages = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages();
+            foreach (UnityEditor.PackageManager.PackageInfo package in packages)
+            {
+                if (package.name == packageName)
+                {
+                    return package;
+                }
+            }
+            return null;
+#else
+            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName);
+#endif
         }
 
         private string GetGitHubRepositoryUrl(string repositoryHandle)

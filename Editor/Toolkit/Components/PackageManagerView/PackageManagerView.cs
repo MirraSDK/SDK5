@@ -36,14 +36,25 @@ namespace MirraGames.SDK.Editor
                 Logger.CreateWarning(this, nameof(CreatePackageCard), "Unable to access repository", Naming.Quote(repositoryHandle));
                 return;
             }
+            bool isPackageInstalled = IsPackageInstalled(packageInfo.name);
             HorizontalCard card = new()
             {
                 HeaderText = $"{packageInfo.displayName} (version: {packageInfo.version})",
                 DescriptionText = packageInfo.name,
-                LetterText = "M",
-                HintText = ""
+                LetterText = packageInfo.displayName[..1].ToUpper(),
+                HintText = isPackageInstalled ? "Installed" : "Not Installed"
             };
             contentContainer.Add(card);
+        }
+
+        private bool IsPackageInstalled(string packageName)
+        {
+            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
+        }
+
+        private string GetGitHubRepositoryUrl(string repositoryHandle)
+        {
+            return $"https://github.com/{repositoryHandle}";
         }
 
         private string GetPackageJsonUrl(string repositoryHandle)

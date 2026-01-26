@@ -122,6 +122,7 @@ namespace MirraGames.SDK.Editor
             {
                 string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
                 UnityEditor.PackageManager.Client.Add(packageGitUrl);
+                Logger.CreateWarning(this, "Wait a few seconds! Unity Package Manager should start installing", cardInfo.Info.displayName);
             };
 
             Button updateButton = new()

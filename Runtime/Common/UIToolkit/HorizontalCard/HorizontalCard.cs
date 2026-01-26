@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace MirraGames.SDK.Common {
@@ -15,6 +16,16 @@ namespace MirraGames.SDK.Common {
             horizontalCardTree.CloneTree(this);
 
             Deselect();
+        }
+
+        public void SetIcon(Texture2D icon)
+        {
+            if (icon == null)
+            {
+                return;
+            }
+            Thumbnail.style.backgroundImage = Background.FromTexture2D(icon);
+            LetterText = string.Empty;
         }
 
         public string HeaderText {

@@ -6,9 +6,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MirraGames.SDK.Editor {
+namespace MirraGames.SDK.Editor
+{
 
-    internal class ToolkitWindow : EditorWindow {
+    internal class ToolkitWindow : EditorWindow
+    {
 
         private const string NavigationElementName = "navigation";
         private const string InspectorElementName = "inspector";
@@ -20,7 +22,8 @@ namespace MirraGames.SDK.Editor {
         internal static Action OnConfigurationChanged;
 
         [MenuItem(Naming.MirraSDK5 + "/Open Toolkit")]
-        public static void Open() {
+        public static void Open()
+        {
             ToolkitWindow window = GetWindow<ToolkitWindow>();
             window.titleContent.text = $"{Naming.MirraSDK5}";
             window.titleContent.image = EditorGUIUtility.isProSkin ?
@@ -35,7 +38,8 @@ namespace MirraGames.SDK.Editor {
 
         private IEventAggregator eventAggregator;
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             eventAggregator = new EventAggregator();
 
             VisualTreeAsset windowBaseAsset = VisualTreeReference.Load("ToolkitWindowBase").VisualTree;
@@ -53,13 +57,15 @@ namespace MirraGames.SDK.Editor {
             RestoreNavigationState();
         }
 
-        private void UpdateDebugInfo() {
+        private void UpdateDebugInfo()
+        {
             BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
             string unityVersion = Application.unityVersion;
             string systemInfo = SystemInfo.operatingSystem;
             PreferencesEditor preferencesEditor = PreferencesEditor.CreateEditor();
             string configurationName = preferencesEditor.GetBuildConfigurationName();
-            if (string.IsNullOrEmpty(configurationName)) {
+            if (string.IsNullOrEmpty(configurationName))
+            {
                 configurationName = "Missing preferences";
             }
             UpdatesAvailable.style.display = DisplayStyle.None;
@@ -68,42 +74,49 @@ namespace MirraGames.SDK.Editor {
             DebugInfo.text = $"| {buildTarget} | {configurationName} | Unity {unityVersion} | {systemInfo}";
         }
 
-        private void OnDisable() {
+        private void OnDisable()
+        {
             eventAggregator.Dispose();
         }
 
         private VisualElement waitOverlay;
         private Label waitLabel;
 
-        private void InitializeToolkitWaitOverlay() {
+        private void InitializeToolkitWaitOverlay()
+        {
             waitOverlay = rootVisualElement.Q<VisualElement>(WaitOverlay);
             waitLabel = waitOverlay.Q<Label>(WaitLabel);
-            
+
             waitOverlay.style.display = DisplayStyle.None;
             EditorEventListener.OnCompilationStarted += ShowWaitOverlay;
             EditorEventListener.OnCompilationFinished += HideWaitOverlay;
         }
 
-        private void ShowWaitOverlay() {
+        private void ShowWaitOverlay()
+        {
             waitOverlay.style.display = DisplayStyle.Flex;
         }
 
-        private void HideWaitOverlay() {
+        private void HideWaitOverlay()
+        {
             waitOverlay.style.display = DisplayStyle.None;
         }
 
         #region Navigation
 
-        private enum NavigationItem {
+        private enum NavigationItem
+        {
             Configurations,
-            // PackageManager,
+            PackageManager,
             BuildAutomation
         }
 
         private const float NavigationPaddingLeft = 15.0f;
 
-        private static NavigationItem CurrentNavigationItem {
-            get {
+        private static NavigationItem CurrentNavigationItem
+        {
+            get
+            {
                 int itemId = EditorPrefs.GetInt($"{PackageTools.ProjectId}.{nameof(CurrentNavigationItem)}", 0);
                 int minItemId = 0;
                 int maxItemId = Enum.GetNames(typeof(NavigationItem)).Length - 1;
@@ -114,16 +127,19 @@ namespace MirraGames.SDK.Editor {
 
         private NavigationList toolkitNavigation;
 
-        private void InitializeToolkitNavigation() {
+        private void InitializeToolkitNavigation()
+        {
             toolkitNavigation = new NavigationList();
             VisualElement navigationElement = rootVisualElement.Q<VisualElement>(NavigationElementName);
             navigationElement.Add(toolkitNavigation);
         }
 
-        private void RestoreNavigationState() {
+        private void RestoreNavigationState()
+        {
             toolkitNavigation.Clear();
             List<string> navigationItemNames = Enum.GetNames(typeof(NavigationItem)).ToList();
-            for (int x = 0; x < navigationItemNames.Count; x++) {
+            for (int x = 0; x < navigationItemNames.Count; x++)
+            {
                 toolkitNavigation.RegisterItem(navigationItemNames[x], NavigationPaddingLeft, OnNavigationItemClick);
             }
             NavigationItem navigationItem = CurrentNavigationItem;
@@ -131,7 +147,8 @@ namespace MirraGames.SDK.Editor {
             SwitchViewport(navigationItem);
         }
 
-        private void OnNavigationItemClick(ClickEvent clickEvent) {
+        private void OnNavigationItemClick(ClickEvent clickEvent)
+        {
             VisualElement element = (VisualElement)clickEvent.currentTarget;
             string elementName = element.name;
             toolkitNavigation.HighlightItem(elementName);
@@ -139,20 +156,25 @@ namespace MirraGames.SDK.Editor {
             SwitchViewport(CurrentNavigationItem);
         }
 
-        private void SwitchViewport(NavigationItem item) {
+        private void SwitchViewport(NavigationItem item)
+        {
             ResetInspector();
             toolkitInspector.HeaderText = item.ToReadableString();
             ResetViewport();
-            switch (item) {
-                case NavigationItem.Configurations: {
+            switch (item)
+            {
+                case NavigationItem.Configurations:
+                {
                     ShowConfigurations();
                     break;
                 }
-                //case NavigationItem.PackageManager: {
-                //    ShowPackageManager();
-                //    break;
-                //}
-                case NavigationItem.BuildAutomation: {
+                case NavigationItem.PackageManager:
+                {
+                    ShowPackageManager();
+                    break;
+                }
+                case NavigationItem.BuildAutomation:
+                {
                     ShowBuildAutomation();
                     break;
                 }
@@ -165,14 +187,16 @@ namespace MirraGames.SDK.Editor {
 
         private Inspector toolkitInspector;
 
-        private void InitializeToolkitInspector() {
+        private void InitializeToolkitInspector()
+        {
             VisualElement inspectorElement = rootVisualElement.Q<VisualElement>(InspectorElementName);
             toolkitInspector = new Inspector();
             inspectorElement.Add(toolkitInspector);
             toolkitInspector.Clear();
         }
 
-        private void ResetInspector() {
+        private void ResetInspector()
+        {
             toolkitInspector.Clear();
             toolkitInspector.FooterVisible = false;
             toolkitInspector.FooterContainer.Clear();
@@ -184,12 +208,14 @@ namespace MirraGames.SDK.Editor {
 
         private VisualElement toolkitViewport;
 
-        private void InitializeToolkitViewport() {
+        private void InitializeToolkitViewport()
+        {
             toolkitViewport = rootVisualElement.Q<VisualElement>(ViewportElementName);
             toolkitViewport.Clear();
         }
 
-        private void ResetViewport() {
+        private void ResetViewport()
+        {
             toolkitViewport.Clear();
         }
 
@@ -200,7 +226,8 @@ namespace MirraGames.SDK.Editor {
         private ConfigurationsView configurationsView;
         private ConfigurationInspector configurationInspector;
 
-        private void ShowConfigurations() {
+        private void ShowConfigurations()
+        {
             configurationInspector ??= new ConfigurationInspector();
             configurationsView ??= new ConfigurationsView(configurationInspector);
             toolkitViewport.Add(configurationsView);
@@ -212,10 +239,14 @@ namespace MirraGames.SDK.Editor {
         #region Package Manager
 
         private PackageManagerView packageManagerView;
+        private PackageManagerInspector packageManagerInspector;
 
-        private void ShowPackageManager() {
-            packageManagerView ??= new PackageManagerView();
+        private void ShowPackageManager()
+        {
+            packageManagerInspector ??= new PackageManagerInspector();
+            packageManagerView ??= new PackageManagerView(packageManagerInspector);
             toolkitViewport.Add(packageManagerView);
+            toolkitInspector.Add(packageManagerInspector);
         }
 
         #endregion
@@ -224,7 +255,8 @@ namespace MirraGames.SDK.Editor {
 
         private BuildAutomationView buildAutomationView;
 
-        private void ShowBuildAutomation() {
+        private void ShowBuildAutomation()
+        {
             buildAutomationView ??= new BuildAutomationView();
             toolkitViewport.Add(buildAutomationView);
         }

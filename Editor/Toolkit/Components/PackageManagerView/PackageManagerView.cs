@@ -1,5 +1,6 @@
 using MirraGames.SDK.Common;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -36,20 +37,37 @@ namespace MirraGames.SDK.Editor
                 Logger.CreateWarning(this, nameof(CreatePackageCard), "Unable to access repository", Naming.Quote(repositoryHandle));
                 return;
             }
+
             bool isPackageInstalled = IsPackageInstalled(packageInfo.name);
+            string localPackageVersion = GetLocalPackageVersion(packageInfo.name);
             HorizontalCard card = new()
             {
-                HeaderText = $"{packageInfo.displayName} (version: {packageInfo.version})",
+                HeaderText = $"{packageInfo.displayName}",
                 DescriptionText = packageInfo.name,
                 LetterText = packageInfo.displayName[..1].ToUpper(),
-                HintText = isPackageInstalled ? "Installed" : "Not Installed"
+                HintText = isPackageInstalled ? $"Available: {packageInfo.version}\nInstalled: {localPackageVersion}" : $"Available: {packageInfo.version}\nNot installed"
             };
             contentContainer.Add(card);
+
+            Task<Texture2D> packageIcon = GetPackagePng(repositoryHandle);
+            _ = packageIcon.ContinueWith(task =>
+            {
+                if (task.Result != null)
+                {
+                    card.SetIcon(task.Result);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private bool IsPackageInstalled(string packageName)
         {
             return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
+        }
+
+        private string GetLocalPackageVersion(string packageName)
+        {
+            UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName);
+            return packageInfo?.version;
         }
 
         private string GetGitHubRepositoryUrl(string repositoryHandle)
@@ -62,11 +80,49 @@ namespace MirraGames.SDK.Editor
             return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/package.json";
         }
 
+        private string GetPackagePngUrl(string repositoryHandle)
+        {
+            return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/package.png";
+        }
+
+        private async Task<Texture2D> GetPackagePng(string repositoryHandle)
+        {
+            string packagePngUrl = GetPackagePngUrl(repositoryHandle);
+            byte[] data = await Get(packagePngUrl);
+            if (data == null)
+            {
+                return null;
+            }
+            Texture2D texture = new(2, 2, TextureFormat.RGBA32, false);
+            texture.LoadImage(data, true);
+            return texture;
+        }
+
         private async Task<PackageInfo> GetPackageInfo(string repositoryHandle)
         {
             string packageJsonUrl = GetPackageJsonUrl(repositoryHandle);
-            Logger.CreateText(this, nameof(GetPackageInfo), Naming.Quote(packageJsonUrl));
-            using UnityWebRequest webRequest = UnityWebRequest.Get(packageJsonUrl);
+            byte[] data = await Get(packageJsonUrl);
+            if(data == null)
+            {
+                return null;
+            }
+            try
+            {
+                string jsonResponse = Encoding.UTF8.GetString(data);
+                PackageInfo packageInfo = JsonUtility.FromJson<PackageInfo>(jsonResponse);
+                return packageInfo;
+            }
+            catch (Exception exception)
+            {
+                Logger.CreateError(this, nameof(GetPackageInfo), exception, Naming.Quote(Encoding.UTF8.GetString(data)));
+                return null;
+            }
+        }
+
+        private async Task<byte[]> Get(string url)
+        {
+            Logger.CreateText(this, nameof(Get), Naming.Quote(url));
+            using UnityWebRequest webRequest = UnityWebRequest.Get(url);
             UnityWebRequestAsyncOperation asyncOperation = webRequest.SendWebRequest();
             DateTime timeoutDateTime = DateTime.UtcNow.AddSeconds(10);
             while (!asyncOperation.isDone && DateTime.UtcNow < timeoutDateTime)
@@ -75,27 +131,16 @@ namespace MirraGames.SDK.Editor
             }
             if (!asyncOperation.isDone)
             {
-                Logger.CreateWarning(this, nameof(GetPackageInfo), "Request timed out", Naming.Quote(packageJsonUrl));
+                Logger.CreateWarning(this, nameof(Get), "Request timed out", Naming.Quote(url));
                 webRequest.Abort();
                 return null;
             }
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Logger.CreateWarning(this, nameof(GetPackageInfo), "Request failed", Naming.Quote(webRequest.error), Naming.Quote(packageJsonUrl));
+                Logger.CreateWarning(this, nameof(Get), "Request failed", Naming.Quote(webRequest.error), Naming.Quote(url));
                 return null;
             }
-            try
-            {
-                string jsonResponse = webRequest.downloadHandler.text;
-                PackageInfo packageInfo = JsonUtility.FromJson<PackageInfo>(jsonResponse);
-                // Logger.CreateText(this, jsonResponse);
-                return packageInfo;
-            }
-            catch (Exception exception)
-            {
-                Logger.CreateError(this, nameof(GetPackageInfo), exception, Naming.Quote(webRequest.downloadHandler.text));
-                return null;
-            }
+            return webRequest.downloadHandler.data;
         }
 
         private new VisualElement contentContainer

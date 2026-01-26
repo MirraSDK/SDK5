@@ -1,5 +1,6 @@
 using MirraGames.SDK.Common;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace MirraGames.SDK.Editor
 {
     internal partial class PackageManagerView : VisualElement
     {
+        private readonly List<HorizontalCard> PackageCards = new();
+
         public PackageManagerView()
         {
             VisualTreeReference reference = VisualTreeReference.Load(nameof(PackageManagerView));
@@ -47,6 +50,7 @@ namespace MirraGames.SDK.Editor
                 LetterText = packageInfo.displayName[..1].ToUpper(),
                 HintText = isPackageInstalled ? $"Available: {packageInfo.version}\nInstalled: {localPackageVersion}" : $"Available: {packageInfo.version}\nNot installed"
             };
+            PackageCards.Add(card);
             contentContainer.Add(card);
 
             Task<Texture2D> packageIcon = GetPackagePng(repositoryHandle);
@@ -57,6 +61,20 @@ namespace MirraGames.SDK.Editor
                     card.SetIcon(task.Result);
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            card.RegisterCallback<ClickEvent>(callback =>
+            {
+                DeselectCards();
+                card.Select();
+            });
+        }
+
+        private void DeselectCards()
+        {
+            foreach (HorizontalCard card in PackageCards)
+            {
+                card.Deselect();
+            }
         }
 
         private bool IsPackageInstalled(string packageName)

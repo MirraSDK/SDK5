@@ -20,7 +20,7 @@ namespace MirraGames.SDK.Features {
                     return;
                 }
                 isAudioClipClicked = true;
-                MirraSDK.Assets.LoadStreamingAudioClip(Application.streamingAssetsPath + "/lostdata1990.mp3", AudioType.MPEG, onSuccess: (audioClip) => {
+                MirraSDK.Assets.LoadStreamingAudioClip(Application.streamingAssetsPath + "/xforce.mp3", AudioType.MPEG, onSuccess: (audioClip) => {
                     Debug.Log("load audio success");
                     GameObject go = new();
                     go.AddComponent<AudioSource>().PlayOneShot(audioClip);

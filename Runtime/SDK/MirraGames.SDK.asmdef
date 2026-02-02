@@ -16,7 +16,8 @@
         "MirraGames.SDK.Playgama",
         "MirraGames.SDK.AppLovin",
         "MirraGames.SDK.AdMob",
-        "MirraGames.SDK.CAS"
+        "MirraGames.SDK.CAS",
+        "MirraGames.SDK.Appodeal"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

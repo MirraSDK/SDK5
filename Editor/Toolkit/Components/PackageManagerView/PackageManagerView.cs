@@ -36,7 +36,9 @@ namespace MirraGames.SDK.Editor
         private async Task InitializeView()
         {
             await CreatePackageCard("MirraSDK/SDK5");
+            await CreatePackageCard("MirraSDK/SDK5-AdMob-API");
             await CreatePackageCard("MirraSDK/SDK5-AppLovin-API");
+            await CreatePackageCard("MirraSDK/SDK5-CAS-API");
             await CreatePackageCard("MirraSDK/SDK5-RuStore-API");
             await CreatePackageCard("MirraSDK/SDK5-YandexMobileAds-API");
             await CreatePackageCard("MirraSDK/SDK5-Playgama-API");

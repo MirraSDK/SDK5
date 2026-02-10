@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="../Stylesheets/ScrollerStyle.uss" />
-    <ui:VisualElement style="flex-shrink: 0; flex-grow: 1;">
-        <ui:ScrollView vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1; flex-shrink: 0;">
-            <ui:VisualElement name="contentContainer" />
+    <Style src="project://database/Packages/com.romanlee17.mirrasdk5/Editor/Toolkit/Components/Stylesheets/ScrollerStyle.uss?fileID=7433441132597879392&amp;guid=e30d73ac5d20665468a86dc798067238&amp;type=3#ScrollerStyle" />
+    <ui:VisualElement style="flex-shrink: 0; flex-grow: 0; height: 100%;">
+        <ui:ScrollView vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 0; flex-shrink: 0; height: 100%;">
+            <ui:VisualElement name="contentContainer" style="flex-shrink: 0; flex-grow: 1;" />
         </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>

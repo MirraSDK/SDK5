@@ -48,3 +48,9 @@ These web platforms are recognized automatically by integrated `mirraSDK.js` fra
 - VK (https://vk.com/games)
 - Y8 (https://www.y8.com/)
 - YandexGames (https://yandex.com/games/)
+
+## Supported Unity versions
+
+- 2022.3.x*
+- 6.0.x*
+- 6.3.x*

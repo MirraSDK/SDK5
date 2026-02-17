@@ -45,6 +45,7 @@ namespace MirraGames.SDK.Editor
             await CreatePackageCard("MirraSDK/SDK5-YandexMobileAds-API");
             await CreatePackageCard("MirraSDK/SDK5-Playgama-API");
             await CreatePackageCard("MirraSDK/SDK5-XSolla-API");
+            await CreatePackageCard("MirraSDK/SDK5-OneStore-API");
         }
 
         private async Task CreatePackageCard(string repositoryHandle)

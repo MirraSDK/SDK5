@@ -2,11 +2,14 @@ using MirraGames.SDK.Common;
 using System;
 using UnityEngine;
 
-namespace MirraGames.SDK.MirraWeb {
+namespace MirraGames.SDK.MirraWeb
+{
 
     [Serializable]
-    public class PlatformSettings {
+    public class PlatformSettings
+    {
 
+        [SerializeField] public Framework_PropertyGroup framework;
         [SerializeField] public Logger_PropertyGroup logger;
         [SerializeField] public CrazyGames_PropertyGroup crazyGames;
         [SerializeField] public Y8_PropertyGroup y8;
@@ -21,7 +24,9 @@ namespace MirraGames.SDK.MirraWeb {
         // [SerializeField] public CoolMath_PropertyGroup coolMath;
         // [SerializeField] public PlayDeck_PropertyGroup playDeck;
 
-        public PlatformSettings() {
+        public PlatformSettings()
+        {
+            framework = new Framework_PropertyGroup();
             logger = new Logger_PropertyGroup();
             crazyGames = new CrazyGames_PropertyGroup();
             y8 = new Y8_PropertyGroup();
@@ -37,8 +42,10 @@ namespace MirraGames.SDK.MirraWeb {
             // playDeck = new PlayDeck_PropertyGroup();
         }
 
-        public PlatformSettings(PreferencesReader preferencesReader) {
+        public PlatformSettings(PreferencesReader preferencesReader)
+        {
             string configurationName = nameof(MirraWebConfiguration);
+            framework = preferencesReader.GetPropertyGroup<Framework_PropertyGroup>(configurationName);
             logger = preferencesReader.GetPropertyGroup<Logger_PropertyGroup>(configurationName);
             crazyGames = preferencesReader.GetPropertyGroup<CrazyGames_PropertyGroup>(configurationName);
             y8 = preferencesReader.GetPropertyGroup<Y8_PropertyGroup>(configurationName);

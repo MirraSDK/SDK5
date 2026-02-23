@@ -12,6 +12,7 @@ namespace MirraGames.SDK.MirraWeb {
         public override bool ReadOnly { get; } = false;
 
         public override Type[] PropertyGroups { get; } = new Type[] {
+            typeof(Framework_PropertyGroup),
             typeof(Logger_PropertyGroup),
             typeof(Y8_PropertyGroup),
             typeof(Lagged_PropertyGroup),

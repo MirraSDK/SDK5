@@ -20,7 +20,8 @@
         "MirraGames.SDK.Appodeal",
         "MirraGames.SDK.XSolla",
         "MirraGames.SDK.XSolla.Android",
-        "MirraGames.SDK.LevelPlay"
+        "MirraGames.SDK.LevelPlay",
+        "MirraGames.SDK.CrazyGames"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

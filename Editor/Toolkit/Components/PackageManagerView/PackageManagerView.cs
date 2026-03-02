@@ -39,8 +39,9 @@ namespace MirraGames.SDK.Editor
             await CreatePackageCard("MirraSDK/SDK5-AdMob-API");
             await CreatePackageCard("MirraSDK/SDK5-AppLovin-API");
             await CreatePackageCard("MirraSDK/SDK5-Appodeal-API");
-            await CreatePackageCard("MirraSDK/SDK5-LevelPlay-API");
             await CreatePackageCard("MirraSDK/SDK5-CAS-API");
+            await CreatePackageCard("MirraSDK/SDK5-CrazyGames-API");
+            await CreatePackageCard("MirraSDK/SDK5-LevelPlay-API");
             await CreatePackageCard("MirraSDK/SDK5-RuStore-API");
             await CreatePackageCard("MirraSDK/SDK5-YandexMobileAds-API");
             await CreatePackageCard("MirraSDK/SDK5-Playgama-API");

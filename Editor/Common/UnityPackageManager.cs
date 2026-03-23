@@ -85,7 +85,7 @@ namespace MirraGames.SDK.Editor
                     return;
                 }
 
-                string packageIdentifier = $"file:{ExternalPackagesFolder}/{fileName}";
+                string packageIdentifier = $"file:{localFilePath}";
                 Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromTarball),
                     "Adding package", Naming.Quote(packageIdentifier));
 

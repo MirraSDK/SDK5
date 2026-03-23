@@ -172,6 +172,21 @@ namespace MirraGames.SDK.Editor
                 "Successfully added package", Naming.Quote(packageIdentifier));
         }
 
+        public static void LockReload()
+        {
+            EditorApplication.LockReloadAssemblies();
+            AssetDatabase.DisallowAutoRefresh();
+            Logger.CreateText(nameof(UnityPackageManager), nameof(LockReload), "Assembly reload locked");
+        }
+
+        public static void UnlockReload()
+        {
+            AssetDatabase.AllowAutoRefresh();
+            EditorApplication.UnlockReloadAssemblies();
+            AssetDatabase.Refresh();
+            Logger.CreateText(nameof(UnityPackageManager), nameof(UnlockReload), "Assembly reload unlocked, refreshing");
+        }
+
         public static bool IsPackageInstalled(string packageName)
         {
 #if UNITY_2022_2_OR_NEWER

@@ -153,32 +153,40 @@ namespace MirraGames.SDK.Editor
                     autoInstallButton.SetEnabled(false);
                     installButton.SetEnabled(false);
 
-                    PackageDependencies dependencies = cardInfo.Dependencies;
-                    if (dependencies != null)
+                    UnityPackageManager.LockReload();
+                    try
                     {
-                        if (dependencies.TarballUrls != null)
+                        PackageDependencies dependencies = cardInfo.Dependencies;
+                        if (dependencies != null)
                         {
-                            foreach (string tarballUrl in dependencies.TarballUrls)
+                            if (dependencies.TarballUrls != null)
                             {
-                                Logger.CreateText(this, nameof(SelectCard), "Installing tarball dependency", Naming.Quote(tarballUrl));
-                                await UnityPackageManager.ImportFromTarball(tarballUrl);
+                                foreach (string tarballUrl in dependencies.TarballUrls)
+                                {
+                                    Logger.CreateText(this, nameof(SelectCard), "Installing tarball dependency", Naming.Quote(tarballUrl));
+                                    await UnityPackageManager.ImportFromTarball(tarballUrl);
+                                }
+                            }
+                            if (dependencies.GitUrls != null)
+                            {
+                                foreach (string gitUrl in dependencies.GitUrls)
+                                {
+                                    Logger.CreateText(this, nameof(SelectCard), "Installing git dependency", Naming.Quote(gitUrl));
+                                    await UnityPackageManager.ImportFromGit(gitUrl);
+                                }
                             }
                         }
-                        if (dependencies.GitUrls != null)
-                        {
-                            foreach (string gitUrl in dependencies.GitUrls)
-                            {
-                                Logger.CreateText(this, nameof(SelectCard), "Installing git dependency", Naming.Quote(gitUrl));
-                                await UnityPackageManager.ImportFromGit(gitUrl);
-                            }
-                        }
+
+                        string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                        Logger.CreateText(this, nameof(SelectCard), "Installing API package", Naming.Quote(cardInfo.Info.displayName));
+                        await UnityPackageManager.ImportFromGit(packageGitUrl, cardInfo.Info.name);
+
+                        Logger.CreateText(this, nameof(SelectCard), "Automatic installation completed for", Naming.Quote(cardInfo.Info.displayName));
                     }
-
-                    string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
-                    Logger.CreateText(this, nameof(SelectCard), "Installing API package", Naming.Quote(cardInfo.Info.displayName));
-                    await UnityPackageManager.ImportFromGit(packageGitUrl, cardInfo.Info.name);
-
-                    Logger.CreateText(this, nameof(SelectCard), "Automatic installation completed for", Naming.Quote(cardInfo.Info.displayName));
+                    finally
+                    {
+                        UnityPackageManager.UnlockReload();
+                    }
                 }
                 catch (Exception exception)
                 {

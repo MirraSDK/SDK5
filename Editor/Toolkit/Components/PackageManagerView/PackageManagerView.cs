@@ -176,7 +176,7 @@ namespace MirraGames.SDK.Editor
 
                     string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
                     Logger.CreateText(this, nameof(SelectCard), "Installing API package", Naming.Quote(cardInfo.Info.displayName));
-                    await UnityPackageManager.ImportFromGit(packageGitUrl);
+                    await UnityPackageManager.ImportFromGit(packageGitUrl, cardInfo.Info.name);
 
                     Logger.CreateText(this, nameof(SelectCard), "Automatic installation completed for", Naming.Quote(cardInfo.Info.displayName));
                 }

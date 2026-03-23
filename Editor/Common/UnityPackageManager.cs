@@ -16,8 +16,15 @@ namespace MirraGames.SDK.Editor
         private const int UpmTimeoutSeconds = 300;
         private const int PollIntervalMs = 100;
 
-        public static async Task ImportFromTarball(string tarballUrl)
+        public static async Task ImportFromTarball(string tarballUrl, string packageName = null)
         {
+            if (!string.IsNullOrEmpty(packageName) && IsPackageInstalled(packageName))
+            {
+                Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromTarball),
+                    "Package already installed, skipping", Naming.Quote(packageName));
+                return;
+            }
+
             Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromTarball), "Downloading", Naming.Quote(tarballUrl));
 
             string projectPath = GetProjectPath();
@@ -101,8 +108,15 @@ namespace MirraGames.SDK.Editor
             }
         }
 
-        public static async Task ImportFromGit(string gitUrl)
+        public static async Task ImportFromGit(string gitUrl, string packageName = null)
         {
+            if (!string.IsNullOrEmpty(packageName) && IsPackageInstalled(packageName))
+            {
+                Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromGit),
+                    "Package already installed, skipping", Naming.Quote(packageName));
+                return;
+            }
+
             Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromGit),
                 "Adding git package", Naming.Quote(gitUrl));
 
@@ -156,6 +170,23 @@ namespace MirraGames.SDK.Editor
 
             Logger.CreateText(nameof(UnityPackageManager), nameof(AddPackageWithProgress),
                 "Successfully added package", Naming.Quote(packageIdentifier));
+        }
+
+        public static bool IsPackageInstalled(string packageName)
+        {
+#if UNITY_2022_2_OR_NEWER
+            UnityEditor.PackageManager.PackageInfo[] packages = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages();
+            foreach (UnityEditor.PackageManager.PackageInfo package in packages)
+            {
+                if (package.name == packageName)
+                {
+                    return true;
+                }
+            }
+            return false;
+#else
+            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
+#endif
         }
 
         private static string GetProjectPath()

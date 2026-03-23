@@ -16,6 +16,7 @@ namespace MirraGames.SDK.Editor
         {
             public string RepositoryHandle;
             public PackageInfo Info;
+            public PackageDependencies Dependencies;
             public Texture2D Icon;
             public string Readme;
         }
@@ -94,6 +95,15 @@ namespace MirraGames.SDK.Editor
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
+            Task<PackageDependencies> packageDependencies = GetPackageDependencies(repositoryHandle);
+            _ = packageDependencies.ContinueWith(task =>
+            {
+                if (task.Result != null)
+                {
+                    cardInfo.Dependencies = task.Result;
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             card.RegisterCallback<ClickEvent>(callback =>
             {
                 SelectCard(card);
@@ -132,6 +142,55 @@ namespace MirraGames.SDK.Editor
                 Logger.CreateWarning(this, "Wait a few seconds! Unity Package Manager should start installing", cardInfo.Info.displayName);
             };
 
+            Button autoInstallButton = new()
+            {
+                text = $"Install automatically (beta)"
+            };
+            autoInstallButton.clicked += async () =>
+            {
+                try
+                {
+                    autoInstallButton.SetEnabled(false);
+                    installButton.SetEnabled(false);
+
+                    PackageDependencies dependencies = cardInfo.Dependencies;
+                    if (dependencies != null)
+                    {
+                        if (dependencies.TarballUrls != null)
+                        {
+                            foreach (string tarballUrl in dependencies.TarballUrls)
+                            {
+                                Logger.CreateText(this, nameof(SelectCard), "Installing tarball dependency", Naming.Quote(tarballUrl));
+                                await UnityPackageManager.ImportFromTarball(tarballUrl);
+                            }
+                        }
+                        if (dependencies.GitUrls != null)
+                        {
+                            foreach (string gitUrl in dependencies.GitUrls)
+                            {
+                                Logger.CreateText(this, nameof(SelectCard), "Installing git dependency", Naming.Quote(gitUrl));
+                                await UnityPackageManager.ImportFromGit(gitUrl);
+                            }
+                        }
+                    }
+
+                    string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+                    Logger.CreateText(this, nameof(SelectCard), "Installing API package", Naming.Quote(cardInfo.Info.displayName));
+                    await UnityPackageManager.ImportFromGit(packageGitUrl);
+
+                    Logger.CreateText(this, nameof(SelectCard), "Automatic installation completed for", Naming.Quote(cardInfo.Info.displayName));
+                }
+                catch (Exception exception)
+                {
+                    Logger.CreateError(this, nameof(SelectCard), "Automatic installation failed", exception.Message);
+                }
+                finally
+                {
+                    autoInstallButton.SetEnabled(true);
+                    installButton.SetEnabled(true);
+                }
+            };
+
             Button updateButton = new()
             {
                 text = $"Update {cardInfo.Info.displayName} to {cardInfo.Info.version}"
@@ -163,6 +222,10 @@ namespace MirraGames.SDK.Editor
             else
             {
                 PackageManagerInspector.ActionButtonsElement.Add(installButton);
+                if (cardInfo.Dependencies != null)
+                {
+                    PackageManagerInspector.ActionButtonsElement.Add(autoInstallButton);
+                }
             }
         }
 
@@ -225,6 +288,32 @@ namespace MirraGames.SDK.Editor
         private string GetPackageGitUrl(string repositoryHandle)
         {
             return $"https://github.com/{repositoryHandle}.git";
+        }
+
+        private string GetDependenciesJsonUrl(string repositoryHandle)
+        {
+            return $"https://raw.githubusercontent.com/{repositoryHandle}/refs/heads/main/dependencies.json";
+        }
+
+        private async Task<PackageDependencies> GetPackageDependencies(string repositoryHandle)
+        {
+            string dependenciesJsonUrl = GetDependenciesJsonUrl(repositoryHandle);
+            byte[] data = await Get(dependenciesJsonUrl);
+            if (data == null)
+            {
+                return null;
+            }
+            try
+            {
+                string jsonResponse = Encoding.UTF8.GetString(data);
+                PackageDependencies dependencies = JsonUtility.FromJson<PackageDependencies>(jsonResponse);
+                return dependencies;
+            }
+            catch (Exception exception)
+            {
+                Logger.CreateError(this, nameof(GetPackageDependencies), exception, Naming.Quote(Encoding.UTF8.GetString(data)));
+                return null;
+            }
         }
 
         private async Task<string> GetPackageReadme(string repositoryHandle)

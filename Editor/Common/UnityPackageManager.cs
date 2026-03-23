@@ -136,7 +136,7 @@ namespace MirraGames.SDK.Editor
 
         private static async Task AddPackageWithProgress(string packageIdentifier)
         {
-            EditorUtility.DisplayProgressBar("Importing Package",
+            EditorUtility.DisplayCancelableProgressBar("Importing Package",
                 $"Adding {Naming.Quote(packageIdentifier)} to Unity Package Manager...", 0.75f);
 
             UnityEditor.PackageManager.Requests.AddRequest addRequest =
@@ -149,13 +149,20 @@ namespace MirraGames.SDK.Editor
             {
                 float elapsed = (float)(DateTime.UtcNow - startTime).TotalSeconds;
                 float progress = 0.75f + 0.24f * Math.Min(elapsed / UpmTimeoutSeconds, 1f);
-                EditorUtility.DisplayProgressBar("Importing Package",
-                    $"Adding {Naming.Quote(packageIdentifier)} to Unity Package Manager...", progress);
+                if (EditorUtility.DisplayCancelableProgressBar("Importing Package",
+                    $"Adding {Naming.Quote(packageIdentifier)} to Unity Package Manager... ({elapsed:F0}s)", progress))
+                {
+                    EditorUtility.ClearProgressBar();
+                    Logger.CreateWarning(nameof(UnityPackageManager), nameof(AddPackageWithProgress),
+                        "Cancelled by user, UPM will continue in background", Naming.Quote(packageIdentifier));
+                    return;
+                }
                 await Task.Delay(PollIntervalMs);
             }
 
             if (!addRequest.IsCompleted)
             {
+                EditorUtility.ClearProgressBar();
                 Logger.CreateWarning(nameof(UnityPackageManager), nameof(AddPackageWithProgress),
                     "Package Manager request timed out, UPM will continue in background", Naming.Quote(packageIdentifier));
                 return;

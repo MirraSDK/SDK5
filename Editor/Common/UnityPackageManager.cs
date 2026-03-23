@@ -16,6 +16,92 @@ namespace MirraGames.SDK.Editor
         private const int UpmTimeoutSeconds = 300;
         private const int PollIntervalMs = 100;
 
+        public static async Task ImportFromUnityPackage(string unityPackageUrl)
+        {
+            Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromUnityPackage), "Downloading", Naming.Quote(unityPackageUrl));
+
+            string projectPath = GetProjectPath();
+            string externalPackagesPath = Path.Combine(projectPath, ExternalPackagesFolder);
+
+            if (!Directory.Exists(externalPackagesPath))
+            {
+                Directory.CreateDirectory(externalPackagesPath);
+            }
+
+            string fileName = GetFileNameFromUrl(unityPackageUrl, ".unitypackage");
+            string localFilePath = Path.Combine(externalPackagesPath, fileName).Replace('\\', '/');
+
+            if (File.Exists(localFilePath))
+            {
+                File.Delete(localFilePath);
+            }
+
+            try
+            {
+                DownloadHandlerFile downloadHandler = new(localFilePath)
+                {
+                    removeFileOnAbort = true
+                };
+
+                using UnityWebRequest request = new(unityPackageUrl, UnityWebRequest.kHttpVerbGET)
+                {
+                    downloadHandler = downloadHandler,
+                    redirectLimit = 10,
+                    timeout = DownloadTimeoutSeconds
+                };
+
+                UnityWebRequestAsyncOperation operation = request.SendWebRequest();
+                DateTime timeoutTime = DateTime.UtcNow.AddSeconds(DownloadTimeoutSeconds);
+
+                while (!operation.isDone && DateTime.UtcNow < timeoutTime)
+                {
+                    float progress = request.downloadProgress;
+                    if (EditorUtility.DisplayCancelableProgressBar(
+                        "Importing Package",
+                        $"Downloading {fileName}... {progress * 100f:F0}%",
+                        progress))
+                    {
+                        request.Abort();
+                        EditorUtility.ClearProgressBar();
+                        Logger.CreateWarning(nameof(UnityPackageManager), nameof(ImportFromUnityPackage), "Download cancelled by user");
+                        return;
+                    }
+                    await Task.Delay(PollIntervalMs);
+                }
+
+                if (!operation.isDone)
+                {
+                    request.Abort();
+                    EditorUtility.ClearProgressBar();
+                    Logger.CreateError(nameof(UnityPackageManager), nameof(ImportFromUnityPackage), "Download timed out", Naming.Quote(unityPackageUrl));
+                    return;
+                }
+
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    EditorUtility.ClearProgressBar();
+                    Logger.CreateError(nameof(UnityPackageManager), nameof(ImportFromUnityPackage),
+                        "Download failed", Naming.Quote(request.error), Naming.Quote(unityPackageUrl));
+                    return;
+                }
+
+                EditorUtility.ClearProgressBar();
+
+                Logger.CreateText(nameof(UnityPackageManager), nameof(ImportFromUnityPackage),
+                    "Opening import dialog", Naming.Quote(localFilePath));
+
+                AssetDatabase.ImportPackage(localFilePath, true);
+            }
+            catch (Exception exception)
+            {
+                Logger.CreateError(nameof(UnityPackageManager), nameof(ImportFromUnityPackage), exception.Message);
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
         public static async Task ImportFromTarball(string tarballUrl, string packageName = null)
         {
             if (!string.IsNullOrEmpty(packageName) && IsPackageInstalled(packageName))
@@ -222,13 +308,13 @@ namespace MirraGames.SDK.Editor
             return dataPath;
         }
 
-        private static string GetFileNameFromUrl(string url)
+        private static string GetFileNameFromUrl(string url, string expectedExtension = ".tgz")
         {
             try
             {
                 Uri uri = new(url);
                 string fileName = Path.GetFileName(uri.LocalPath);
-                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".tgz", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(expectedExtension, StringComparison.OrdinalIgnoreCase))
                 {
                     return fileName;
                 }
@@ -237,7 +323,7 @@ namespace MirraGames.SDK.Editor
             {
                 // Fall through to generate a default name
             }
-            return $"package-{DateTime.UtcNow:yyyyMMddHHmmss}.tgz";
+            return $"package-{DateTime.UtcNow:yyyyMMddHHmmss}{expectedExtension}";
         }
     }
 }

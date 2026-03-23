@@ -230,11 +230,11 @@ namespace MirraGames.SDK.Editor
             }
             else
             {
-                PackageManagerInspector.ActionButtonsElement.Add(installButton);
                 if (cardInfo.Dependencies != null)
                 {
                     PackageManagerInspector.ActionButtonsElement.Add(autoInstallButton);
                 }
+                PackageManagerInspector.ActionButtonsElement.Add(installButton);
             }
 
             if (cardInfo.Dependencies?.UnityPackages != null)

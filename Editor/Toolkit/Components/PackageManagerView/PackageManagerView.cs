@@ -1,6 +1,7 @@
 using MirraGames.SDK.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -235,6 +236,35 @@ namespace MirraGames.SDK.Editor
                     PackageManagerInspector.ActionButtonsElement.Add(autoInstallButton);
                 }
             }
+
+            if (cardInfo.Dependencies?.UnityPackages != null)
+            {
+                foreach (string unityPackageUrl in cardInfo.Dependencies.UnityPackages)
+                {
+                    string packageName = GetUnityPackageDisplayName(unityPackageUrl);
+                    Button unityPackageButton = new()
+                    {
+                        text = $"Import {packageName}"
+                    };
+                    unityPackageButton.clicked += async () =>
+                    {
+                        unityPackageButton.SetEnabled(false);
+                        try
+                        {
+                            await UnityPackageManager.ImportFromUnityPackage(unityPackageUrl);
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.CreateError(this, nameof(SelectCard), "Failed to import unity package", exception.Message);
+                        }
+                        finally
+                        {
+                            unityPackageButton.SetEnabled(true);
+                        }
+                    };
+                    PackageManagerInspector.ActionButtonsElement.Add(unityPackageButton);
+                }
+            }
         }
 
         private void DeselectCards()
@@ -271,6 +301,19 @@ namespace MirraGames.SDK.Editor
 #else
             return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName);
 #endif
+        }
+
+        private string GetUnityPackageDisplayName(string url)
+        {
+            try
+            {
+                Uri uri = new(url);
+                return Path.GetFileNameWithoutExtension(uri.LocalPath);
+            }
+            catch
+            {
+                return "UnityPackage";
+            }
         }
 
         private string GetGitHubRepositoryUrl(string repositoryHandle)

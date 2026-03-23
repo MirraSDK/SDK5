@@ -164,7 +164,7 @@ namespace MirraGames.SDK.Editor
             int assetsIndex = dataPath.LastIndexOf("/Assets");
             if (assetsIndex >= 0)
             {
-                return dataPath.Substring(0, assetsIndex);
+                return dataPath[..assetsIndex];
             }
             return dataPath;
         }

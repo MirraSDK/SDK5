@@ -19,6 +19,7 @@
         "MirraGames.SDK.CAS",
         "MirraGames.SDK.Appodeal",
         "MirraGames.SDK.XSolla",
+        "MirraGames.SDK.XSolla.Web",
         "MirraGames.SDK.XSolla.Android",
         "MirraGames.SDK.LevelPlay",
         "MirraGames.SDK.CrazyGames"

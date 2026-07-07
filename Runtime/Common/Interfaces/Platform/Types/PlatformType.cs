@@ -41,6 +41,7 @@ namespace MirraGames.SDK.Common {
         QATool,
         Discord,
         GamePush,
+        WgPlayground,
     }
 
 }

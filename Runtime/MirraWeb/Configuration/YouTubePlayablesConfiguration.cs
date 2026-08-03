@@ -1,4 +1,5 @@
 using MirraGames.SDK.Common;
+using MirraGames.SDK.MirraWeb;
 using System;
 
 namespace MirraGames.SDK.YouTubePlayables
@@ -6,23 +7,21 @@ namespace MirraGames.SDK.YouTubePlayables
     [Configuration]
     public class YouTubePlayablesConfiguration : Configuration
     {
-
         public override string Name { get; } = "YouTubePlayables";
         public override string Description { get; } = "YouTube Playables Web support from MirraGames";
         public override string IconName { get; } = "YouTube";
         public override bool ReadOnly { get; } = false;
 
-        // Группы свойств для отрисовки в окне SDK
         public override Type[] PropertyGroups { get; } = new Type[] {
             typeof(Framework_PropertyGroup),
             typeof(Logger_PropertyGroup),
         };
 
-        // Провайдеры (Объединено и без дубликатов)
-        public override string AchievementsProviderName { get; } = "FallbackAchievements";
+        // Провайдеры
+        public override string AchievementsProviderName { get; } = nameof(MirraWebAchievements);
         public override string AdsProviderName { get; } = nameof(MirraWebAds);
         public override string EventsReporterProviderName { get; } = "FallbackEventsReporter";
-        public override string GameplayReporterProviderName { get; } = "FallbackGameplayReporter";
+        public override string GameplayReporterProviderName { get; } = nameof(MirraWebGameplayReporter);
 
         public override string AddressablesProviderName { get; } = "UnityEngineAddressables";
         public override string AssetBundlesProviderName { get; } = "UnityEngineAssetBundles";

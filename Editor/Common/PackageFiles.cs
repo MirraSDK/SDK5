@@ -13,6 +13,7 @@ namespace MirraGames.SDK.Editor {
         public static readonly string AbsoluteResourcesPath = GetAbsoluteResourcesPath();
         public static readonly string RelativeResourcesPath = GetRelativeResourcesPath();
         public static readonly string RelativePackageDatabasePath = GetRelativePackageDatabasePath();
+        public static readonly string RelativePackageWebGLTemplatesPath = GetRelativePackageWebGLTemplatesPath();
 
         private static string GetAbsoluteResourcesPath() {
             return Path.Combine(Application.dataPath, Naming.Resources, Naming.MirraSDK5).NormalizePath();
@@ -26,6 +27,24 @@ namespace MirraGames.SDK.Editor {
             return Path.Combine(Naming.Packages, Naming.PackageName).NormalizePath();
         }
 
+        private static string GetRelativePackageWebGLTemplatesPath()
+        {
+            return Path.Combine(RelativePackageDatabasePath, Naming.Editor, Naming.WebGLTemplates).NormalizePath();
+        }
+        
+        public static string GetWebGLTemplatePath(string name)
+        {
+            string[] searchPaths = new string[] { RelativePackageWebGLTemplatesPath };
+            string[] guids = AssetDatabase.FindAssets($"t:DefaultAsset {name}", searchPaths);
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                if (assetPath != null)
+                    return assetPath;
+            }
+            return null;
+        }
+        
         public static Texture2D FindTextureAsset(string name) {
             string[] searchPaths = new string[] { RelativePackageDatabasePath };
             string[] guids = AssetDatabase.FindAssets($"t:Texture2D {name}", searchPaths);

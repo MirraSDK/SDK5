@@ -7,7 +7,7 @@ namespace MirraGames.SDK.Common {
         public const string MirraSDK5 = "MirraSDK5";
         public const string Toolkit = "Toolkit";
         public const string EmptyJson = "{}";
-        public const string Dash = "—";
+        public const string Dash = "\ufffd";
 
         public const string Assets = "Assets";
         public const string Resources = "Resources";
@@ -15,6 +15,7 @@ namespace MirraGames.SDK.Common {
         public const string Builds = "Builds";
         public const string Build = "Build";
         public const string Editor = "Editor";
+        public const string WebGLTemplates = "WebGLTemplates";
         public const string Override = "Override";
         public const string Visible = "Visible";
 

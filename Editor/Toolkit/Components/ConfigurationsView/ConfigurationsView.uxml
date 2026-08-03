@@ -3,6 +3,7 @@
     <ui:VisualElement style="flex-grow: 1; flex-shrink: 1;">
         <ui:VisualElement name="ConfigurationGroup">
             <ui:Label text="Configuration" display-tooltip-when-elided="true" style="-unity-font-style: bold; margin-top: 10px; margin-left: 10px;" />
+            <ui:Button name="ImportWebGLTemplatesButton" text="Import WebGL Templates" style="-unity-font-style: bold; margin-top: 5px; margin-left: 10px; display: none;"/>
             <ui:DropdownField label="Editor Configuration" index="0" name="EditorConfiguration" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0; display: flex;" />
             <ui:DropdownField label="Build Configuration" index="0" name="BuildConfiguration" style="margin-top: 5px; margin-left: 10px; margin-right: 10px; margin-bottom: 0;" />
             <ui:VisualElement name="separator" style="height: 1px; background-color: rgb(35, 35, 35); margin-top: 10px; margin-right: 0; margin-bottom: 0;" />

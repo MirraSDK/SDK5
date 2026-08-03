@@ -3,8 +3,11 @@ using MirraGames.SDK.SourceGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Logger = MirraGames.SDK.Common.Logger;
 
 namespace MirraGames.SDK.Editor {
 
@@ -25,6 +28,7 @@ namespace MirraGames.SDK.Editor {
 
         private VisualElement ContentContainer => this.Q<VisualElement>("ContentContainer");
         private List<HorizontalCard> HorizontalCards { get; } = new();
+        private Button ImportWebGLTemplatesButton => this.Q<Button>(nameof(ImportWebGLTemplatesButton));
         private DropdownField EditorConfiguration => this.Q<DropdownField>("EditorConfiguration");
         private DropdownField BuildConfiguration => this.Q<DropdownField>("BuildConfiguration");
 
@@ -56,8 +60,67 @@ namespace MirraGames.SDK.Editor {
                 preferencesEditor.SetBuildConfigurationName(value.ToString());
             }
         }
+        
+        private void ImportWebGLTemplates(params string[] templateNames)
+        {
+            if (templateNames.Length == 0) return;
+            string currentTemplateName = String.Empty;
+            string lastWindowTitle = String.Empty;
+            ImportWebGLTemplate(templateNames[0]);
 
+            void WindowFocusChanged()
+            {
+                EditorWindow window = EditorWindow.focusedWindow;
+                if (lastWindowTitle.Equals("Import Unity Package") && !currentTemplateName.Equals(String.Empty))
+                {
+                    EditorWindow.windowFocusChanged -= WindowFocusChanged;
+                    ImportWebGLTemplateCompleted(currentTemplateName);
+                }
+                lastWindowTitle = window.titleContent.text;
+            }
+
+            void ImportWebGLTemplateCanceled(string templateName)
+            {
+                currentTemplateName = String.Empty;
+                AssetDatabase.importPackageCancelled -= ImportWebGLTemplateCanceled;
+            }
+            void ImportWebGLTemplateFailed(string templateName, string errMsg)
+            {
+                currentTemplateName = String.Empty;
+                AssetDatabase.importPackageFailed -= ImportWebGLTemplateFailed;
+                ImportWebGLTemplateCompleted(templateName);
+            }
+            void ImportWebGLTemplateCompleted(string templateName)
+            {
+                currentTemplateName = String.Empty;
+                AssetDatabase.importPackageCompleted -= ImportWebGLTemplateCompleted;
+                int index = Array.IndexOf(templateNames, templateName);
+                if (index < templateNames.Length-1)
+                {
+                    ImportWebGLTemplate(templateNames[index+1]);
+                }
+            }
+            void ImportWebGLTemplate(string templateName)
+            {
+                currentTemplateName = templateName;
+                EditorWindow.windowFocusChanged -= WindowFocusChanged;
+                EditorWindow.windowFocusChanged += WindowFocusChanged;
+                AssetDatabase.importPackageCompleted += ImportWebGLTemplateCompleted;
+                AssetDatabase.importPackageFailed += ImportWebGLTemplateFailed;
+                AssetDatabase.importPackageCancelled += ImportWebGLTemplateCanceled;
+                AssetDatabase.ImportPackage(PackageFiles.GetWebGLTemplatePath(templateName), true);
+            }
+        }
+        
         private void InitializeConfigurationSettings() {
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebGL)
+            {
+                ImportWebGLTemplatesButton.style.display = DisplayStyle.Flex;
+                ImportWebGLTemplatesButton.clicked += () =>
+                {
+                    ImportWebGLTemplates("MirraWebTemplate", "MirraYoutubeTemplate");
+                };
+            }
             Array configurationChoices = Enum.GetValues(typeof(ConfigurationType));
             List<string> configurationChoiceNames = configurationChoices.Cast<ConfigurationType>().Select(v => v.ToString()).ToList();
             EditorConfiguration.choices = configurationChoiceNames;

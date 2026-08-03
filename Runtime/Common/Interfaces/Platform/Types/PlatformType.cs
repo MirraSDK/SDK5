@@ -1,6 +1,8 @@
-namespace MirraGames.SDK.Common {
+namespace MirraGames.SDK.Common
+{
 
-    public enum PlatformType {
+    public enum PlatformType
+    {
         Localhost,
         NintendoSwitch,
         Editor,
@@ -42,6 +44,7 @@ namespace MirraGames.SDK.Common {
         Discord,
         GamePush,
         WgPlayground,
+        YouTubePlayables,
     }
 
 }

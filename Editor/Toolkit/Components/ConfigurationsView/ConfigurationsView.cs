@@ -67,7 +67,8 @@ namespace MirraGames.SDK.Editor {
             string currentTemplateName = String.Empty;
             string lastWindowTitle = String.Empty;
             ImportWebGLTemplate(templateNames[0]);
-
+            
+#if UNITY_6000_OR_NEWER
             void WindowFocusChanged()
             {
                 EditorWindow window = EditorWindow.focusedWindow;
@@ -78,6 +79,7 @@ namespace MirraGames.SDK.Editor {
                 }
                 lastWindowTitle = window.titleContent.text;
             }
+#endif
 
             void ImportWebGLTemplateCanceled(string templateName)
             {
@@ -103,8 +105,10 @@ namespace MirraGames.SDK.Editor {
             void ImportWebGLTemplate(string templateName)
             {
                 currentTemplateName = templateName;
+#if UNITY_6000_OR_NEWER
                 EditorWindow.windowFocusChanged -= WindowFocusChanged;
-                EditorWindow.windowFocusChanged += WindowFocusChanged;
+                EditorWindow.windowFocusChanged += WindowFocusChanged; 
+#endif
                 AssetDatabase.importPackageCompleted += ImportWebGLTemplateCompleted;
                 AssetDatabase.importPackageFailed += ImportWebGLTemplateFailed;
                 AssetDatabase.importPackageCancelled += ImportWebGLTemplateCanceled;

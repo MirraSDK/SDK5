@@ -68,7 +68,7 @@ namespace MirraGames.SDK.Editor {
             string lastWindowTitle = String.Empty;
             ImportWebGLTemplate(templateNames[0]);
             
-#if UNITY_6000_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
             void WindowFocusChanged()
             {
                 EditorWindow window = EditorWindow.focusedWindow;
@@ -105,7 +105,7 @@ namespace MirraGames.SDK.Editor {
             void ImportWebGLTemplate(string templateName)
             {
                 currentTemplateName = templateName;
-#if UNITY_6000_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
                 EditorWindow.windowFocusChanged -= WindowFocusChanged;
                 EditorWindow.windowFocusChanged += WindowFocusChanged; 
 #endif

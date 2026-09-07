@@ -44,7 +44,7 @@ namespace MirraGames.SDK.MirraWeb
 
         public PlatformSettings(PreferencesReader preferencesReader)
         {
-            string configurationName = nameof(MirraWebConfiguration);
+            string configurationName = preferencesReader.GetConfigurationName();
             framework = preferencesReader.GetPropertyGroup<Framework_PropertyGroup>(configurationName);
             logger = preferencesReader.GetPropertyGroup<Logger_PropertyGroup>(configurationName);
             crazyGames = preferencesReader.GetPropertyGroup<CrazyGames_PropertyGroup>(configurationName);

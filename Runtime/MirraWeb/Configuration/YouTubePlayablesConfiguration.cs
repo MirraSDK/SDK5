@@ -26,7 +26,7 @@ namespace MirraGames.SDK.YouTubePlayables
         public override string AddressablesProviderName { get; } = "UnityEngineAddressables";
         public override string AssetBundlesProviderName { get; } = "UnityEngineAssetBundles";
         public override string StreamingAssetsProviderName { get; } = "UnityEngineStreamingAssets";
-        public override string AudioProviderName { get; } = "UnityEngineAudio";
+        public override string AudioProviderName { get; } = nameof(YouTubePlayablesAudio);
         public override string DeviceCursorProviderName { get; } = "UnityEngineDeviceCursor";
         public override string DateTimeProviderName { get; } = "SystemDateTime";
         public override string TimeScaleProviderName { get; } = "UnityEngineTimeScale";

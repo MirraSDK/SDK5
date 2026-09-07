@@ -8,6 +8,7 @@ namespace MirraGames.SDK.Common {
         protected readonly IEventAggregator eventAggregator;
 
         private bool isPaused = false;
+        private bool isMuted = false;
         private float bufferVolume;
         private bool bufferPause;
 
@@ -32,6 +33,16 @@ namespace MirraGames.SDK.Common {
         protected abstract bool GetPauseImpl();
         protected abstract void SetPauseImpl(bool pause);
 
+        protected void SetMuted(bool muted) {
+            isMuted = muted;
+            try {
+                SetVolumeImpl(isPaused || isMuted ? PausedVolume : bufferVolume);
+            }
+            catch (Exception exception) {
+                Logger.CreateError(this, nameof(SetMuted), exception);
+            }
+        }
+
         public float Volume {
             get {
                 return GetVolumeImpl();
@@ -39,7 +50,7 @@ namespace MirraGames.SDK.Common {
             set {
                 bufferVolume = value;
                 try {
-                    SetVolumeImpl(isPaused ? PausedVolume : bufferVolume);
+                    SetVolumeImpl(isPaused || isMuted ? PausedVolume : bufferVolume);
                 }
                 catch (Exception exception) {
                     Logger.CreateError(this, nameof(Volume), exception);
@@ -66,7 +77,7 @@ namespace MirraGames.SDK.Common {
             if (HandlePauseEvents) {
                 isPaused = eventData.IsPaused;
                 try {
-                    SetVolumeImpl(isPaused ? PausedVolume : bufferVolume);
+                    SetVolumeImpl(isPaused || isMuted ? PausedVolume : bufferVolume);
                     SetPauseImpl(isPaused || bufferPause);
                 }
                 catch (Exception exception) {

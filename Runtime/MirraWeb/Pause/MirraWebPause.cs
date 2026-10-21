@@ -23,9 +23,16 @@ namespace MirraGames.SDK.MirraWeb {
 
         private static event Action<bool> OnExternalPauseChange;
 
+        /// <summary>
+        /// Whether Unity focus and application pause callbacks pause the game. Platforms that dictate pause themselves turn this off.
+        /// </summary>
+        protected virtual bool HandleApplicationEvents => true;
+
         public MirraWebPause(IEventAggregator aggregator, IEventDispatcher eventDispatcher) : base(aggregator) {
-            eventDispatcher.OnApplicationFocus += OnApplicationFocus;
-            eventDispatcher.OnApplicationPause += OnApplicationPause;
+            if (HandleApplicationEvents) {
+                eventDispatcher.OnApplicationFocus += OnApplicationFocus;
+                eventDispatcher.OnApplicationPause += OnApplicationPause;
+            }
             try {
                 mirraSDK_pause_onPauseChange(OnPauseChangeCallback);
                 OnExternalPauseChange += (isPaused) => {

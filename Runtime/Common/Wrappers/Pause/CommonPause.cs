@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MirraGames.SDK.Common {
@@ -8,16 +9,42 @@ namespace MirraGames.SDK.Common {
         protected readonly IEventAggregator eventAggregator;
         protected readonly HashSet<string> pauseSources = new();
 
+        private readonly List<Action<bool>> listeners = new();
+
         public CommonPause(IEventAggregator eventAggregator) {
             this.eventAggregator = eventAggregator;
             eventAggregator.Subscribe<PauseSourceEvent>(this);
         }
+
+        public bool IsPaused { get; private set; }
 
         public void OnEvent(PauseSourceEvent eventData) {
             Register(eventData.Source, eventData.Pause);
         }
 
         public virtual void OnPauseChange(bool isPaused) { }
+
+        public void AddListener(Action<bool> onPauseChange) {
+            if (onPauseChange == null || listeners.Contains(onPauseChange)) return;
+            listeners.Add(onPauseChange);
+        }
+
+        public void RemoveListener(Action<bool> onPauseChange) {
+            listeners.Remove(onPauseChange);
+        }
+
+        private void NotifyListeners(bool isPaused) {
+            // Iterates backwards so a listener can remove itself; one failing listener does not stop the others.
+            for (int index = listeners.Count - 1; index >= 0; index--) {
+                if (index >= listeners.Count) continue;
+                try {
+                    listeners[index].Invoke(isPaused);
+                }
+                catch (Exception exception) {
+                    Logger.CreateError(this, nameof(NotifyListeners), exception);
+                }
+            }
+        }
 
         public void Register(object source, bool value) {
             string key = (source is string) ? source as string : source.GetType().ToString();
@@ -32,6 +59,10 @@ namespace MirraGames.SDK.Common {
             bool isPaused = pauseSources.Count > 0;
             eventAggregator.Publish(this, new PauseChangeEvent(isPaused));
             OnPauseChange(isPaused);
+            if (isPaused != IsPaused) {
+                IsPaused = isPaused;
+                NotifyListeners(isPaused);
+            }
         }
 
     }

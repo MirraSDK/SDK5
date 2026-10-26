@@ -37,9 +37,9 @@ namespace MirraGames.SDK.YouTubePlayables
         public override string DeviceInfoProviderName { get; } = nameof(MirraWebDeviceInfo);
         public override string FlagsProviderName { get; } = nameof(MirraWebFlags);
         public override string LanguageInfoProviderName { get; } = nameof(MirraWebLanguageInfo);
-        public override string PauseProviderName { get; } = nameof(MirraWebPause);
-        public override string PaymentsProviderName { get; } = nameof(MirraWebPayments);
-        public override string PlatformInfoProviderName { get; } = nameof(MirraWebPlatformInfo);
+        public override string PauseProviderName { get; } = nameof(YouTubePlayablesPause);
+        public override string PaymentsProviderName { get; } = nameof(YouTubePlayablesPayments);
+        public override string PlatformInfoProviderName { get; } = nameof(YouTubePlayablesPlatformInfo);
         public override string PlatformInteractionsProviderName { get; } = nameof(MirraWebPlatformInteractions);
         public override string PlayerAccountProviderName { get; } = nameof(MirraWebPlayerAccount);
     }

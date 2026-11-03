@@ -18,7 +18,7 @@ namespace MirraGames.SDK.Common {
 
         public bool IsPaused { get; private set; }
 
-        public void OnEvent(PauseSourceEvent eventData) {
+        public virtual void OnEvent(PauseSourceEvent eventData) {
             Register(eventData.Source, eventData.Pause);
         }
 

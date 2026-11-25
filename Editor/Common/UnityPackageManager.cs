@@ -223,6 +223,59 @@ namespace MirraGames.SDK.Editor
         }
 
         /// <summary>
+        /// Installs or updates a git package together with everything its dependency list names:
+        /// tarballs, git packages, scoped registries and registry packages. Script reloads stay locked
+        /// until every step has run, so a half-installed state never compiles.
+        /// </summary>
+        public static async Task InstallWithDependencies(PackageDependencies dependencies, string packageGitUrl, string packageName, bool isUpdate)
+        {
+            LockReload();
+            try
+            {
+                await InstallLegacyDependencies(dependencies);
+                await SyncRegistryDependencies(dependencies);
+
+                // An update passes no package name, so the add is not skipped as already installed.
+                Logger.CreateText(nameof(UnityPackageManager), nameof(InstallWithDependencies),
+                    isUpdate ? "Updating package" : "Installing package", Naming.Quote(packageGitUrl));
+                await ImportFromGit(packageGitUrl, isUpdate ? null : packageName);
+            }
+            finally
+            {
+                UnlockReload();
+            }
+        }
+
+        /// <summary>
+        /// Installs the tarball and git entries of a dependency list, in that order.
+        /// </summary>
+        public static async Task InstallLegacyDependencies(PackageDependencies dependencies)
+        {
+            if (dependencies == null)
+            {
+                return;
+            }
+            if (dependencies.TarballUrls != null)
+            {
+                foreach (string tarballUrl in dependencies.TarballUrls)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(InstallLegacyDependencies),
+                        "Installing tarball dependency", Naming.Quote(tarballUrl));
+                    await ImportFromTarball(tarballUrl);
+                }
+            }
+            if (dependencies.GitUrls != null)
+            {
+                foreach (string gitUrl in dependencies.GitUrls)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(InstallLegacyDependencies),
+                        "Installing git dependency", Naming.Quote(gitUrl));
+                    await ImportFromGit(gitUrl);
+                }
+            }
+        }
+
+        /// <summary>
         /// Writes the scoped registries and registry packages of a dependency list into Packages/manifest.json
         /// and resolves them. Optional packages are raised to their listed version when they are already
         /// installed, or all of them when <paramref name="includeOptional"/> is set.
@@ -466,19 +519,61 @@ namespace MirraGames.SDK.Editor
 
         public static bool IsPackageInstalled(string packageName)
         {
+            return GetInstalledVersion(packageName) != null;
+        }
+
+        /// <summary>
+        /// Returns the version of an installed package, or null when it is not installed.
+        /// </summary>
+        public static string GetInstalledVersion(string packageName)
+        {
 #if UNITY_2022_2_OR_NEWER
             UnityEditor.PackageManager.PackageInfo[] packages = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages();
             foreach (UnityEditor.PackageManager.PackageInfo package in packages)
             {
                 if (package.name == packageName)
                 {
-                    return true;
+                    return package.version;
+                }
+            }
+            return null;
+#else
+            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName)?.version;
+#endif
+        }
+
+        /// <summary>
+        /// True when a required registry package is missing or older than listed, or an installed optional one is older than listed.
+        /// </summary>
+        public static bool NeedsRegistrySync(PackageDependencies dependencies)
+        {
+            if (dependencies == null)
+            {
+                return false;
+            }
+            if (dependencies.RegistryPackages != null)
+            {
+                foreach (RegistryPackage package in dependencies.RegistryPackages)
+                {
+                    string installedVersion = GetInstalledVersion(package.Name);
+                    if (installedVersion == null || PackageManifestEditor.CompareVersions(installedVersion, package.Version) < 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            if (dependencies.OptionalRegistryPackages != null)
+            {
+                foreach (OptionalRegistryPackage package in dependencies.OptionalRegistryPackages)
+                {
+                    string installedVersion = GetInstalledVersion(package.Name);
+                    if (installedVersion != null && PackageManifestEditor.CompareVersions(installedVersion, package.Version) < 0)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
-#else
-            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
-#endif
         }
 
         private static string GetProjectPath()

@@ -1,6 +1,8 @@
 using MirraGames.SDK.Common;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -220,6 +222,241 @@ namespace MirraGames.SDK.Editor
             }
         }
 
+        /// <summary>
+        /// Installs or updates a git package together with everything its dependency list names:
+        /// tarballs, git packages, scoped registries and registry packages. Script reloads stay locked
+        /// until every step has run, so a half-installed state never compiles.
+        /// </summary>
+        public static async Task InstallWithDependencies(PackageDependencies dependencies, string packageGitUrl, string packageName, bool isUpdate)
+        {
+            LockReload();
+            try
+            {
+                await InstallLegacyDependencies(dependencies);
+                await SyncRegistryDependencies(dependencies);
+
+                // An update passes no package name, so the add is not skipped as already installed.
+                Logger.CreateText(nameof(UnityPackageManager), nameof(InstallWithDependencies),
+                    isUpdate ? "Updating package" : "Installing package", Naming.Quote(packageGitUrl));
+                await ImportFromGit(packageGitUrl, isUpdate ? null : packageName);
+            }
+            finally
+            {
+                UnlockReload();
+            }
+        }
+
+        /// <summary>
+        /// Installs the tarball and git entries of a dependency list, in that order.
+        /// </summary>
+        public static async Task InstallLegacyDependencies(PackageDependencies dependencies)
+        {
+            if (dependencies == null)
+            {
+                return;
+            }
+            if (dependencies.TarballUrls != null)
+            {
+                foreach (string tarballUrl in dependencies.TarballUrls)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(InstallLegacyDependencies),
+                        "Installing tarball dependency", Naming.Quote(tarballUrl));
+                    await ImportFromTarball(tarballUrl);
+                }
+            }
+            if (dependencies.GitUrls != null)
+            {
+                foreach (string gitUrl in dependencies.GitUrls)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(InstallLegacyDependencies),
+                        "Installing git dependency", Naming.Quote(gitUrl));
+                    await ImportFromGit(gitUrl);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes the scoped registries and registry packages of a dependency list into Packages/manifest.json
+        /// and resolves them. Optional packages are raised to their listed version when they are already
+        /// installed, or all of them when <paramref name="includeOptional"/> is set.
+        /// Returns true when the manifest changed.
+        /// </summary>
+        public static async Task<bool> SyncRegistryDependencies(PackageDependencies dependencies, bool includeOptional = false)
+        {
+            if (dependencies == null)
+            {
+                return false;
+            }
+
+            List<RegistryPackage> packages = new();
+            if (dependencies.RegistryPackages != null)
+            {
+                packages.AddRange(dependencies.RegistryPackages);
+            }
+            if (dependencies.OptionalRegistryPackages != null)
+            {
+                foreach (OptionalRegistryPackage optionalPackage in dependencies.OptionalRegistryPackages)
+                {
+                    if (optionalPackage != null && (includeOptional || IsPackageInstalled(optionalPackage.Name)))
+                    {
+                        packages.Add(new RegistryPackage { Name = optionalPackage.Name, Version = optionalPackage.Version });
+                    }
+                }
+            }
+
+            return await ApplyRegistryPackages(dependencies.ScopedRegistries, packages.ToArray());
+        }
+
+        /// <summary>
+        /// Installs one optional registry package together with the registries and required packages it relies on.
+        /// Returns true when the manifest changed.
+        /// </summary>
+        public static async Task<bool> InstallRegistryPackage(PackageDependencies dependencies, OptionalRegistryPackage optionalPackage)
+        {
+            if (dependencies == null || optionalPackage == null)
+            {
+                return false;
+            }
+
+            List<RegistryPackage> packages = new();
+            if (dependencies.RegistryPackages != null)
+            {
+                packages.AddRange(dependencies.RegistryPackages);
+            }
+            packages.Add(new RegistryPackage { Name = optionalPackage.Name, Version = optionalPackage.Version });
+
+            return await ApplyRegistryPackages(dependencies.ScopedRegistries, packages.ToArray());
+        }
+
+        /// <summary>
+        /// Removes a registry package from Packages/manifest.json and resolves. Returns true when it was listed.
+        /// </summary>
+        public static async Task<bool> RemoveRegistryPackage(string packageName)
+        {
+            try
+            {
+                string manifestPath = GetManifestPath();
+                string manifestJson = File.ReadAllText(manifestPath);
+                string updatedJson = PackageManifestEditor.Remove(manifestJson, packageName, out bool changed);
+                if (!changed)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(RemoveRegistryPackage),
+                        "Package is not listed in the manifest", Naming.Quote(packageName));
+                    return false;
+                }
+
+                WriteManifest(manifestPath, updatedJson);
+                Logger.CreateText(nameof(UnityPackageManager), nameof(RemoveRegistryPackage), "Removed", Naming.Quote(packageName));
+                await ResolveWithProgress();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Logger.CreateError(nameof(UnityPackageManager), nameof(RemoveRegistryPackage), exception.Message);
+                return false;
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        private static async Task<bool> ApplyRegistryPackages(ScopedRegistry[] registries, RegistryPackage[] packages)
+        {
+            try
+            {
+                string manifestPath = GetManifestPath();
+                string manifestJson = File.ReadAllText(manifestPath);
+
+                foreach (string conflict in PackageManifestEditor.FindScopeConflicts(manifestJson, registries))
+                {
+                    Logger.CreateWarning(nameof(UnityPackageManager), nameof(SyncRegistryDependencies), conflict);
+                }
+
+                string updatedJson = PackageManifestEditor.Apply(manifestJson, registries, packages, out bool changed);
+                if (!changed)
+                {
+                    Logger.CreateText(nameof(UnityPackageManager), nameof(SyncRegistryDependencies), "Registry packages are up to date");
+                    return false;
+                }
+
+                foreach (RegistryPackage package in packages)
+                {
+                    string previous = PackageManifestEditor.GetDependency(manifestJson, package.Name);
+                    string current = PackageManifestEditor.GetDependency(updatedJson, package.Name);
+                    if (previous != current)
+                    {
+                        Logger.CreateText(nameof(UnityPackageManager), nameof(SyncRegistryDependencies),
+                            Naming.Quote(package.Name), previous ?? "not installed", "->", current);
+                    }
+                }
+
+                WriteManifest(manifestPath, updatedJson);
+                await ResolveWithProgress();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Logger.CreateError(nameof(UnityPackageManager), nameof(SyncRegistryDependencies), exception.Message);
+                return false;
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        private static string GetManifestPath()
+        {
+            return Path.Combine(GetProjectPath(), "Packages", "manifest.json").Replace('\\', '/');
+        }
+
+        // The new text goes to a sibling file first, so a failed write never leaves a truncated manifest.
+        private static void WriteManifest(string manifestPath, string manifestJson)
+        {
+            string temporaryPath = manifestPath + ".tmp";
+            File.WriteAllText(temporaryPath, manifestJson, new UTF8Encoding(false));
+            File.Copy(temporaryPath, manifestPath, true);
+            File.Delete(temporaryPath);
+        }
+
+        private static async Task ResolveWithProgress()
+        {
+            const string title = "Importing Package";
+            const string message = "Resolving registry packages...";
+            EditorUtility.DisplayProgressBar(title, message, 0.5f);
+
+            UnityEditor.PackageManager.Client.Resolve();
+
+            // The list request is queued behind the resolve, so its completion marks the end of the resolve.
+            UnityEditor.PackageManager.Requests.ListRequest listRequest = UnityEditor.PackageManager.Client.List(true, false);
+            DateTime startTime = DateTime.UtcNow;
+            DateTime timeoutTime = startTime.AddSeconds(UpmTimeoutSeconds);
+
+            while (!listRequest.IsCompleted && DateTime.UtcNow < timeoutTime)
+            {
+                float elapsed = (float)(DateTime.UtcNow - startTime).TotalSeconds;
+                EditorUtility.DisplayProgressBar(title, $"{message} ({elapsed:F0}s)", 0.5f + 0.49f * Math.Min(elapsed / UpmTimeoutSeconds, 1f));
+                await Task.Delay(PollIntervalMs);
+            }
+
+            if (!listRequest.IsCompleted)
+            {
+                Logger.CreateWarning(nameof(UnityPackageManager), nameof(ResolveWithProgress),
+                    "Package Manager resolve timed out, UPM will continue in background");
+                return;
+            }
+
+            if (listRequest.Status == UnityEditor.PackageManager.StatusCode.Failure)
+            {
+                Logger.CreateError(nameof(UnityPackageManager), nameof(ResolveWithProgress),
+                    "Failed to resolve packages", Naming.Quote(listRequest.Error?.message));
+                return;
+            }
+
+            Logger.CreateText(nameof(UnityPackageManager), nameof(ResolveWithProgress), "Packages resolved");
+        }
+
         private static async Task AddPackageWithProgress(string packageIdentifier)
         {
             EditorUtility.DisplayCancelableProgressBar("Importing Package",
@@ -282,19 +519,61 @@ namespace MirraGames.SDK.Editor
 
         public static bool IsPackageInstalled(string packageName)
         {
+            return GetInstalledVersion(packageName) != null;
+        }
+
+        /// <summary>
+        /// Returns the version of an installed package, or null when it is not installed.
+        /// </summary>
+        public static string GetInstalledVersion(string packageName)
+        {
 #if UNITY_2022_2_OR_NEWER
             UnityEditor.PackageManager.PackageInfo[] packages = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages();
             foreach (UnityEditor.PackageManager.PackageInfo package in packages)
             {
                 if (package.name == packageName)
                 {
-                    return true;
+                    return package.version;
+                }
+            }
+            return null;
+#else
+            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName)?.version;
+#endif
+        }
+
+        /// <summary>
+        /// True when a required registry package is missing or older than listed, or an installed optional one is older than listed.
+        /// </summary>
+        public static bool NeedsRegistrySync(PackageDependencies dependencies)
+        {
+            if (dependencies == null)
+            {
+                return false;
+            }
+            if (dependencies.RegistryPackages != null)
+            {
+                foreach (RegistryPackage package in dependencies.RegistryPackages)
+                {
+                    string installedVersion = GetInstalledVersion(package.Name);
+                    if (installedVersion == null || PackageManifestEditor.CompareVersions(installedVersion, package.Version) < 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            if (dependencies.OptionalRegistryPackages != null)
+            {
+                foreach (OptionalRegistryPackage package in dependencies.OptionalRegistryPackages)
+                {
+                    string installedVersion = GetInstalledVersion(package.Name);
+                    if (installedVersion != null && PackageManifestEditor.CompareVersions(installedVersion, package.Version) < 0)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
-#else
-            return UnityEditor.PackageManager.PackageInfo.FindForPackageName(packageName) != null;
-#endif
         }
 
         private static string GetProjectPath()

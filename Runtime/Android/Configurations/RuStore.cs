@@ -9,6 +9,7 @@ namespace MirraGames.SDK.Android {
         public override string Description { get; } = "https://www.rustore.ru/";
         public override string IconName { get; } = "RuStore";
 
+        public override string FlagsProviderName => "RuStoreFlags";
         public override string PaymentsProviderName => "RuStorePayments";
         public override string PlatformInteractionsProviderName => "RuStorePlatformInteractions";
         public override string PlatformInfoProviderName => "RuStorePlatformInfo";

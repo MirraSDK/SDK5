@@ -116,21 +116,26 @@ namespace MirraGames.SDK.Editor
             DeselectCards();
             card.Select();
 
-            string description = PackageCards[card].Info.description;
+            PackageCardInfo cardInfo = PackageCards[card];
+
+            string description = cardInfo.Info.description;
             if (string.IsNullOrEmpty(description))
             {
                 description = Naming.Dash;
             }
+            string registryPackagesSummary = GetRegistryPackagesSummary(cardInfo.Dependencies);
+            if (!string.IsNullOrEmpty(registryPackagesSummary))
+            {
+                description = $"{description}\n\n{registryPackagesSummary}";
+            }
             PackageManagerInspector.DescriptionLabel.text = description;
 
-            string readme = PackageCards[card].Readme;
+            string readme = cardInfo.Readme;
             if (string.IsNullOrEmpty(readme))
             {
                 readme = Naming.Dash;
             }
             PackageManagerInspector.ReadmeLabel.text = readme;
-
-            PackageCardInfo cardInfo = PackageCards[card];
 
             Button installButton = new()
             {
@@ -157,26 +162,7 @@ namespace MirraGames.SDK.Editor
                     UnityPackageManager.LockReload();
                     try
                     {
-                        PackageDependencies dependencies = cardInfo.Dependencies;
-                        if (dependencies != null)
-                        {
-                            if (dependencies.TarballUrls != null)
-                            {
-                                foreach (string tarballUrl in dependencies.TarballUrls)
-                                {
-                                    Logger.CreateText(this, nameof(SelectCard), "Installing tarball dependency", Naming.Quote(tarballUrl));
-                                    await UnityPackageManager.ImportFromTarball(tarballUrl);
-                                }
-                            }
-                            if (dependencies.GitUrls != null)
-                            {
-                                foreach (string gitUrl in dependencies.GitUrls)
-                                {
-                                    Logger.CreateText(this, nameof(SelectCard), "Installing git dependency", Naming.Quote(gitUrl));
-                                    await UnityPackageManager.ImportFromGit(gitUrl);
-                                }
-                            }
-                        }
+                        await UnityPackageManager.InstallLegacyDependencies(cardInfo.Dependencies);
 
                         string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
                         Logger.CreateText(this, nameof(SelectCard), "Installing API package", Naming.Quote(cardInfo.Info.displayName));
@@ -220,7 +206,11 @@ namespace MirraGames.SDK.Editor
             };
 
             PackageManagerInspector.ActionButtonsElement.Clear();
-            if (IsPackageInstalled(cardInfo.Info.name))
+            if (cardInfo.Dependencies != null && cardInfo.Dependencies.HasRegistryPackages)
+            {
+                AddRegistryPackageButtons(cardInfo, removeButton);
+            }
+            else if (IsPackageInstalled(cardInfo.Info.name))
             {
                 if (GetLocalPackageVersion(cardInfo.Info.name) != cardInfo.Info.version)
                 {
@@ -265,6 +255,109 @@ namespace MirraGames.SDK.Editor
                     PackageManagerInspector.ActionButtonsElement.Add(unityPackageButton);
                 }
             }
+        }
+
+        // A package with registry dependencies is installed and updated together with them in one action,
+        // because its code only compiles against the listed versions.
+        private void AddRegistryPackageButtons(PackageCardInfo cardInfo, Button removeButton)
+        {
+            VisualElement actionButtons = PackageManagerInspector.ActionButtonsElement;
+            PackageDependencies dependencies = cardInfo.Dependencies;
+            string displayName = cardInfo.Info.displayName;
+            string packageGitUrl = GetPackageGitUrl(cardInfo.RepositoryHandle);
+
+            if (!IsPackageInstalled(cardInfo.Info.name))
+            {
+                actionButtons.Add(CreateActionButton($"Install {displayName}",
+                    () => UnityPackageManager.InstallWithDependencies(dependencies, packageGitUrl, cardInfo.Info.name, false)));
+                return;
+            }
+
+            if (GetLocalPackageVersion(cardInfo.Info.name) != cardInfo.Info.version)
+            {
+                actionButtons.Add(CreateActionButton($"Update {displayName} to {cardInfo.Info.version}",
+                    () => UnityPackageManager.InstallWithDependencies(dependencies, packageGitUrl, cardInfo.Info.name, true)));
+            }
+            else if (UnityPackageManager.NeedsRegistrySync(dependencies))
+            {
+                actionButtons.Add(CreateActionButton($"Install dependencies of {displayName}",
+                    () => UnityPackageManager.SyncRegistryDependencies(dependencies)));
+            }
+
+            if (dependencies.OptionalRegistryPackages != null)
+            {
+                foreach (OptionalRegistryPackage optionalPackage in dependencies.OptionalRegistryPackages)
+                {
+                    string label = string.IsNullOrEmpty(optionalPackage.Label) ? optionalPackage.Name : optionalPackage.Label;
+                    if (IsPackageInstalled(optionalPackage.Name))
+                    {
+                        actionButtons.Add(CreateActionButton($"Remove {label}",
+                            () => UnityPackageManager.RemoveRegistryPackage(optionalPackage.Name)));
+                    }
+                    else
+                    {
+                        actionButtons.Add(CreateActionButton($"Install {label}",
+                            () => UnityPackageManager.InstallRegistryPackage(dependencies, optionalPackage)));
+                    }
+                }
+            }
+
+            actionButtons.Add(removeButton);
+        }
+
+        // Every action button is disabled while one action runs, so two Package Manager operations never overlap.
+        private Button CreateActionButton(string text, Func<Task> action)
+        {
+            Button button = new()
+            {
+                text = text
+            };
+            button.clicked += async () =>
+            {
+                PackageManagerInspector.ActionButtonsElement.SetEnabled(false);
+                try
+                {
+                    await action();
+                }
+                catch (Exception exception)
+                {
+                    Logger.CreateError(this, nameof(CreateActionButton), Naming.Quote(text), exception.Message);
+                }
+                finally
+                {
+                    PackageManagerInspector.ActionButtonsElement.SetEnabled(true);
+                }
+            };
+            return button;
+        }
+
+        private string GetRegistryPackagesSummary(PackageDependencies dependencies)
+        {
+            if (dependencies == null || !dependencies.HasRegistryPackages)
+            {
+                return null;
+            }
+            StringBuilder summary = new();
+            summary.Append("Registry packages:");
+            foreach (RegistryPackage package in dependencies.RegistryPackages)
+            {
+                AppendRegistryPackageLine(summary, package.Name, package.Version, "not installed");
+            }
+            if (dependencies.OptionalRegistryPackages != null)
+            {
+                foreach (OptionalRegistryPackage package in dependencies.OptionalRegistryPackages)
+                {
+                    AppendRegistryPackageLine(summary, package.Name, package.Version, "optional, not installed");
+                }
+            }
+            return summary.ToString();
+        }
+
+        private void AppendRegistryPackageLine(StringBuilder summary, string packageName, string listedVersion, string missingText)
+        {
+            string installedVersion = GetLocalPackageVersion(packageName);
+            string state = installedVersion == null ? missingText : $"installed {installedVersion}";
+            summary.Append($"\n{packageName} {listedVersion} ({state})");
         }
 
         private void DeselectCards()
